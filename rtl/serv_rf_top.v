@@ -36,6 +36,7 @@ module serv_rf_top
    input wire 	      clk,
    input wire 	      i_rst,
    input wire 	      i_timer_irq,
+   input wire	      i_external_irq,
 `ifdef RISCV_FORMAL
    output wire 	      rvfi_valid,
    output wire [63:0] rvfi_order,
@@ -77,6 +78,11 @@ module serv_rf_top
    output wire [ 2:0] o_ext_funct3,
    input  wire [31:0] i_ext_rd,
    input  wire        i_ext_ready,
+
+   // Sleep functionality
+   output wire          o_sleep_req,
+   output wire          o_wakeup_req,
+
    // MDU
    output wire        o_mdu_valid);
 
@@ -158,6 +164,7 @@ module serv_rf_top
       .clk      (clk),
       .i_rst    (i_rst),
       .i_timer_irq  (i_timer_irq),
+      .i_external_irq (i_external_irq),
 `ifdef RISCV_FORMAL
       .rvfi_valid     (rvfi_valid    ),
       .rvfi_order     (rvfi_order    ),
@@ -207,6 +214,11 @@ module serv_rf_top
       .o_dbus_cyc   (o_dbus_cyc),
       .i_dbus_rdt   (i_dbus_rdt),
       .i_dbus_ack   (i_dbus_ack),
+
+      // Sleep
+      .o_sleep_req      (o_sleep_req),
+      .o_wakeup_req     (o_wakeup_req),
+      
 
       //Extension
       .o_ext_funct3 (o_ext_funct3),
