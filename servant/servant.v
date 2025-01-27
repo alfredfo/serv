@@ -22,6 +22,13 @@ module servant
    localparam [0:0] with_mdu = 1'b0;
 `endif
 
+`ifdef EI
+   localparam [0:0] with_ei = 1'b1;
+`else
+   localparam [0:0] with_ei = 1'b0;
+`endif
+
+
    localparam	   aw = $clog2(memsize);
    localparam	   csr_regs = with_csr*4;
 
@@ -31,7 +38,7 @@ module servant
    wire 	timer_irq;
 
 
-   wire [31:0] 	wb_mem_adr;
+   wire [31:0]      wb_mem_adr;
    wire [31:0] 	wb_mem_dat;
    wire [3:0] 	wb_mem_sel;
    wire 	wb_mem_we;
@@ -140,7 +147,8 @@ module servant
        .debug    (debug),
        .with_c   (compress[0]),
        .with_csr (with_csr[0]),
-       .with_mdu (with_mdu))
+       .with_mdu (with_mdu),
+       .with_ei (with_ei))
    cpu
      (
       .i_clk        (wb_clk),

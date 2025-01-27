@@ -16,6 +16,7 @@ module servile
     parameter [0:0] debug = 1'b0,
     parameter [0:0] with_c = 1'b0,
     parameter [0:0] with_csr = 1'b0,
+    parameter [0:0] with_ei = 1'b0,
     parameter [0:0] with_mdu = 1'b0,
     //Internally calculated. Do not touch
     parameter	    B = width-1,
@@ -96,6 +97,7 @@ module servile
    wire [31:0]		   mdu_rd;
    wire			   mdu_ready;
 
+   wire			   ei_irq;
    servile_mux
      #(.sim (sim))
    mux
@@ -194,7 +196,16 @@ module servile
       end else begin
 	 assign mdu_ready = 1'b0;
 	 assign mdu_rd = 32'd0;
-      end
+      end // else: !if(with_mdu)
+
+      if (with_ei) begin : gen_ei
+	 ei_top ei_serv
+	   (.i_clk (i_clk),
+	    .i_rst (i_rst),
+	    .o_eirq (ei_irq));
+      end else begin
+	 assign ei_irq = 1'b0;
+      end // else !if(with_ei)
    endgenerate
 
    serv_top
@@ -206,6 +217,7 @@ module servile
        .RESET_PC       (reset_pc),
        .DEBUG          (debug),
        .MDU            (with_mdu),
+       .EI             (with_ei),
        .COMPRESSED     (with_c))
    cpu
      (

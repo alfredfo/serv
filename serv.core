@@ -37,6 +37,7 @@ targets:
       - "is_toplevel? (ALIGN)"
       - "is_toplevel? (COMPRESSED)"
       - "is_toplevel? (MDU)"
+      - "is_toplevel? (EI)"
       - "is_toplevel? (PRE_REGISTER)"
       - "is_toplevel? (RESET_STRATEGY)"
       - RISCV_FORMAL
@@ -66,6 +67,11 @@ parameters:
     datatype   : int
     description: Enables interface for RISC-V standard M-extension
     paramtype  : vlogparam
+
+  EI:
+    datatype    : int
+    description : Enable interface for RISC-V external interrupts
+    paramtype   : vlogparam
 
   PRE_REGISTER:
     datatype    : int

@@ -1,7 +1,7 @@
 module serv_bufreg #(
       parameter [0:0] MDU = 0,
-      parameter W = 1,
-      parameter B = W-1
+      parameter       W = 1,
+      parameter       B = W-1
 )(
    input wire 	      i_clk,
    //State

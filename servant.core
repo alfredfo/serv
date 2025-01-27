@@ -37,7 +37,7 @@ filesets:
       - "!tool_quartus? (servant/servant_ram.v)"
       - servant/servant.v
     file_type : verilogSource
-    depend : [servile, "mdu? (mdu)"]
+    depend : [servile, "mdu? (mdu)", "ei? (ei)"]
 
   verilator_tb:
     files:
@@ -587,6 +587,7 @@ targets:
       - RISCV_FORMAL
       - width
       - "mdu? (MDU=1)"
+      - "ei? (EI=1)"
       - SERV_CLEAR_RAM=true
       - firmware
       - memsize
@@ -655,6 +656,7 @@ targets:
     parameters :
       - RISCV_FORMAL
       - "mdu? (MDU=1)"
+      - "ei? (EI=1)"
       - cps
       - firmware
       - memsize
@@ -709,6 +711,11 @@ parameters:
     datatype  : int
     description : Enables RISC-V standard M-extension
     paramtype : vlogdefine
+
+  EI:
+    datatype    : int
+    description : Enable interface for RISC-V external interrupts
+    paramtype   : vlogdefine
 
   memfile:
     datatype    : file

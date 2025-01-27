@@ -16,22 +16,26 @@ module serv_rf_top
     */
     parameter [0:0] MDU = 0,
     /* Register signals before or after the decoder
-       0 : Register after the decoder. Faster but uses more resources
-       1 : (default) Register before the decoder. Slower but uses less resources
+     0 : Register after the decoder. Faster but uses more resources
+     1 : (default) Register before the decoder. Slower but uses less resources
      */
-    parameter PRE_REGISTER = 1,
+  
+    parameter [0:0] EI = 0,
+    /* asd */
+    
+    parameter       PRE_REGISTER = 1,
     /* Amount of reset applied to design
        "NONE" : No reset at all. Relies on a POR to set correct initialization
                  values and that core isn't reset during runtime
        "MINI" : Standard setting. Resets the minimal amount of FFs needed to
                  restart execution from the instruction at RESET_PC
      */
-    parameter RESET_STRATEGY = "MINI",
+    parameter       RESET_STRATEGY = "MINI",
     parameter [0:0] DEBUG = 1'b0,
-    parameter WITH_CSR = 1,
-    parameter W        = 1,
-    parameter RF_WIDTH = W * 2,
-	parameter RF_L2D   = $clog2((32+(WITH_CSR*4))*32/RF_WIDTH))
+    parameter       WITH_CSR = 1,
+    parameter       W = 1,
+    parameter       RF_WIDTH = W * 2,
+	  parameter       RF_L2D = $clog2((32+(WITH_CSR*4))*32/RF_WIDTH))
   (
    input wire 	      clk,
    input wire 	      i_rst,
@@ -150,6 +154,7 @@ module serv_rf_top
        .WITH_CSR (WITH_CSR),
        .DEBUG (DEBUG),
        .MDU(MDU),
+       .EI(EI),
        .COMPRESSED(COMPRESSED),
        .ALIGN(ALIGN),
        .W(W))
