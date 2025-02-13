@@ -6,37 +6,38 @@ module serv_csr
     parameter B = W-1
   )
   (
-   input wire 	    i_clk,
-   input wire 	    i_rst,
+   input wire	     i_clk,
+   input wire	     i_rst,
    //State
-   input wire 	    i_trig_irq,
-   input wire 	    i_en,
-   input wire 	    i_cnt0to3,
-   input wire 	    i_cnt3,
-   input wire 	    i_cnt7,
-   input wire 	    i_cnt11,
-   input wire 	    i_cnt12,
-   input wire 	    i_cnt_done,
-   input wire 	    i_mem_op,
-   input wire 	    i_mtip,
-   input wire 	    i_trap,
-   output reg 	    o_new_irq,
+   input wire	     i_trig_irq,
+   input wire	     i_en,
+   input wire	     i_cnt0to3,
+   input wire	     i_cnt3,
+   input wire	     i_cnt7,
+   input wire	     i_cnt11,
+   input wire	     i_cnt12,
+   input wire	     i_cnt_done,
+   input wire	     i_mem_op,
+   input wire	     i_mtip,
+   input wire	     i_meip,
+   input wire	     i_trap,
+   output reg	     o_new_irq,
    //Control
-   input wire 	    i_e_op,
-   input wire 	    i_ebreak,
-   input wire 	    i_mem_cmd,
-   input wire 	    i_mstatus_en,
-   input wire 	    i_mie_en,
-   input wire 	    i_mcause_en,
-   input wire [1:0] i_csr_source,
-   input wire 	    i_mret,
-   input wire 	    i_csr_d_sel,
+   input wire	     i_e_op,
+   input wire	     i_ebreak,
+   input wire	     i_mem_cmd,
+   input wire	     i_mstatus_en,
+   input wire	     i_mie_en,
+   input wire	     i_mcause_en,
+   input wire [1:0]  i_csr_source,
+   input wire	     i_mret,
+   input wire	     i_csr_d_sel,
    //Data
-   input wire 	[B:0]    i_rf_csr_out,
-   output wire 	[B:0]    o_csr_in,
-   input wire 	[B:0]    i_csr_imm,
-   input wire 	[B:0]    i_rs1,
-   output wire 	[B:0]    o_q);
+   input wire [B:0]  i_rf_csr_out,
+   output wire [B:0] o_csr_in,
+   input wire [B:0]  i_csr_imm,
+   input wire [B:0]  i_rs1,
+   output wire [B:0] o_q);
 
    localparam [1:0]
      CSR_SOURCE_CSR = 2'b00,
@@ -47,6 +48,8 @@ module serv_csr
    reg 		    mstatus_mie;
    reg 		    mstatus_mpie;
    reg 		    mie_mtie;
+   reg 		    mie_meie;
+
 
    reg 		mcause31;
    reg [3:0] 	mcause3_0;
@@ -81,7 +84,8 @@ module serv_csr
 
    assign o_q = csr_out;
 
-   wire 	timer_irq = i_mtip & mstatus_mie & mie_mtie;
+   wire	timer_irq = i_mtip & mstatus_mie & mie_mtie;
+   wire	external_irq = i_meip & mstatus_mie & mie_meie;
 
    assign mcause = i_cnt0to3 ? mcause3_0[B:0] : //[3:0]
 		   i_cnt_done ? {mcause31,{B{1'b0}}} //[31]
@@ -92,7 +96,7 @@ module serv_csr
    always @(posedge i_clk) begin
       if (i_trig_irq) begin
 	 timer_irq_r <= timer_irq;
-	 o_new_irq   <= timer_irq & !timer_irq_r;
+	 o_new_irq <= (timer_irq & !timer_irq_r);
       end
 
       if (i_mie_en & i_cnt7)

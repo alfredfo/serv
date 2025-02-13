@@ -37,16 +37,17 @@ module serv_rf_top
     parameter       RF_WIDTH = W * 2,
 	  parameter       RF_L2D = $clog2((32+(WITH_CSR*4))*32/RF_WIDTH))
   (
-   input wire 	      clk,
-   input wire 	      i_rst,
-   input wire 	      i_timer_irq,
+   input wire	      clk,
+   input wire	      i_rst,
+   input wire	      i_timer_irq,
+   input wire	      i_external_irq,
 `ifdef RISCV_FORMAL
-   output wire 	      rvfi_valid,
+   output wire	      rvfi_valid,
    output wire [63:0] rvfi_order,
    output wire [31:0] rvfi_insn,
-   output wire 	      rvfi_trap,
-   output wire 	      rvfi_halt,
-   output wire 	      rvfi_intr,
+   output wire	      rvfi_trap,
+   output wire	      rvfi_halt,
+   output wire	      rvfi_intr,
    output wire [1:0]  rvfi_mode,
    output wire [1:0]  rvfi_ixl,
    output wire [4:0]  rvfi_rs1_addr,
@@ -64,25 +65,25 @@ module serv_rf_top
    output wire [31:0] rvfi_mem_wdata,
 `endif
    output wire [31:0] o_ibus_adr,
-   output wire 	      o_ibus_cyc,
+   output wire	      o_ibus_cyc,
    input wire [31:0]  i_ibus_rdt,
-   input wire 	      i_ibus_ack,
+   input wire	      i_ibus_ack,
    output wire [31:0] o_dbus_adr,
    output wire [31:0] o_dbus_dat,
    output wire [3:0]  o_dbus_sel,
-   output wire 	      o_dbus_we ,
-   output wire 	      o_dbus_cyc,
+   output wire	      o_dbus_we ,
+   output wire	      o_dbus_cyc,
    input wire [31:0]  i_dbus_rdt,
-   input wire 	      i_dbus_ack,
+   input wire	      i_dbus_ack,
 
    // Extension
    output wire [31:0] o_ext_rs1,
    output wire [31:0] o_ext_rs2,
    output wire [ 2:0] o_ext_funct3,
-   input  wire [31:0] i_ext_rd,
-   input  wire        i_ext_ready,
+   input wire [31:0]  i_ext_rd,
+   input wire	      i_ext_ready,
    // MDU
-   output wire        o_mdu_valid);
+   output wire	      o_mdu_valid);
 
    localparam CSR_REGS = WITH_CSR*4;
 
@@ -163,6 +164,7 @@ module serv_rf_top
       .clk      (clk),
       .i_rst    (i_rst),
       .i_timer_irq  (i_timer_irq),
+      .i_external_irq (i_external_irq),
 `ifdef RISCV_FORMAL
       .rvfi_valid     (rvfi_valid    ),
       .rvfi_order     (rvfi_order    ),
