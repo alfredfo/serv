@@ -20,6 +20,14 @@ filesets:
     file_type : verilogSource
     depend : [vlog_tb_utils]
 
+  servant_timer_tb:
+    files:
+      - sw/timer_interrupt.hex : {file_type: user, copyto: .}
+      - bench/servant_timer_sim.v
+      - bench/servant_timer_tb.v
+    file_type : verilogSource
+    depend : [vlog_tb_utils]
+
   service:
     files:
       - servant/ice40_pll.v
@@ -46,6 +54,13 @@ filesets:
       - "!vidbo? (bench/servant_tb.cpp)" : {file_type : cppSource}
     file_type : verilogSource
     depend : ["vidbo? (vidbo)"]
+
+  verilator_timer_tb:
+    files:
+      - bench/servant_timer_sim.v
+      - "bench/servant_timer_tb.cpp" : {file_type : cppSource}
+    file_type : verilogSource
+
 
   # Target-specific filesets. Alphabetically sorted
 
@@ -670,6 +685,30 @@ targets:
       - align
       - with_csr=1
     toplevel : servant_sim
+
+  verilator_timer_tb:
+    description: Verilator timer testbench
+    filesets : [soc, verilator_timer_tb]
+    flow: sim
+    flow_options:
+      tool: verilator
+      verilator_options : [--trace]
+    parameters :
+      - RISCV_FORMAL
+      - "mdu? (MDU=1)"
+      - cps
+      - firmware
+      - memsize
+      - signature
+      - timeout
+      - trace_pc
+      - vcd
+      - vcd_start
+      - width
+      - compressed
+      - align
+      - with_csr=1
+    toplevel : servant_timer_sim
 
   zcu106:
     default_tool: vivado
