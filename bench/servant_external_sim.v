@@ -7,7 +7,8 @@ module servant_external_sim
    output wire	      q,
    output wire	      timer_irq,
    output wire	      mie_mtie,
-   output wire	      isjump
+   output wire	      isjump,
+   input wire	      ext_irq
 );
 
    parameter memfile = "";
@@ -39,6 +40,7 @@ module servant_external_sim
    assign pc_vld = dut.wb_mem_ack;
    assign timer_irq = dut.timer_irq;
    assign mie_mtie = dut.cpu.cpu.mret;
-   assign isjump = dut.cpu.cpu.jump;  
+   assign isjump = dut.cpu.cpu.jump;
+   assign dut.external_irq = ext_irq;
 
 endmodule

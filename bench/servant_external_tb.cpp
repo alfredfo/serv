@@ -63,13 +63,22 @@ int main(int argc, char **argv, char **env)
   printf("timer irq, %d\n", top->timer_irq);
   bool q = top->q;
   int clock = 0;
+  int cnt = 0;
+  top->ext_irq = 0;
   while (!(done || Verilated::gotFinish())) {
     clock++;
     top->wb_rst = main_time < 100;
     top->eval();
+    tfp->dump(main_time);
     if (top->wb_clk && top->pc_vld && top->pc_adr) {
       std::this_thread::sleep_for(std::chrono::milliseconds(500));
       printf("%d | %d\n", top->isjump, top->pc_adr);
+      if (top->pc_adr == 32) {
+	if (cnt > 5) {
+	  top->ext_irq = 1;
+	}
+	cnt++;	
+      }
     }
     if (timeout && (main_time >= timeout)) {
       printf("Timeout: Exiting at time %lu\n", main_time);
@@ -78,5 +87,7 @@ int main(int argc, char **argv, char **env)
     top->wb_clk = !top->wb_clk;
     main_time+=31.25;
   }
+  if (tfp)
+    tfp->close();
   exit(0);
 }

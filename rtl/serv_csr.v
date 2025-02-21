@@ -144,7 +144,7 @@ module serv_csr
 
        The expressions below are derived from the following truth table
        timer_irq  => 0111 (timer=7)
-       ext_irq    => 1011
+       ext_irq    => 1011 (ext=11)
        e_op => x011 (ebreak=3, ecall=11)
        mem  => 01x0 (store=6, load=4)
        ctrl => 0000 (jump=0)
