@@ -60,7 +60,6 @@ int main(int argc, char **argv, char **env)
   std::time_t last_time = std::time(nullptr);
 
   top->wb_clk = 1;
-  printf("timer irq, %d\n", top->timer_irq);
   bool q = top->q;
   int clock = 0;
   int cnt = 0;
@@ -72,7 +71,7 @@ int main(int argc, char **argv, char **env)
     tfp->dump(main_time);
     if (top->wb_clk && top->pc_vld && top->pc_adr) {
       std::this_thread::sleep_for(std::chrono::milliseconds(500));
-      printf("%d | %d\n", top->isjump, top->pc_adr);
+      printf("%d\n", top->pc_adr);
       if (top->pc_adr == 32) {
 	if (cnt > 5) {
 	  top->ext_irq = 1;

@@ -5,9 +5,6 @@ module servant_external_sim
    output wire [31:0] pc_adr,
    output wire	      pc_vld,
    output wire	      q,
-   output wire	      timer_irq,
-   output wire	      mie_mtie,
-   output wire	      isjump,
    input wire	      ext_irq
 );
 
@@ -38,9 +35,6 @@ module servant_external_sim
 
    assign pc_adr = dut.wb_mem_adr;
    assign pc_vld = dut.wb_mem_ack;
-   assign timer_irq = dut.timer_irq;
-   assign mie_mtie = dut.cpu.cpu.mret;
-   assign isjump = dut.cpu.cpu.jump;
    assign dut.external_irq = ext_irq;
 
 endmodule
