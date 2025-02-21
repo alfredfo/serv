@@ -58,7 +58,7 @@ module serv_csr
    wire [B:0]	csr_in;
    wire [B:0]	csr_out;
 
-   reg 		timer_irq_r;
+   reg 		irq_r;
 
    wire [B:0]	d = i_csr_d_sel ? i_csr_imm : i_rs1;
 
@@ -84,8 +84,9 @@ module serv_csr
 
    assign o_q = csr_out;
 
-   wire	timer_irq = i_mtip & mstatus_mie & mie_mtie;
-   wire	external_irq = i_meip & mstatus_mie & mie_meie;
+   wire	timer_irq = i_mtip & mie_mtie;
+   wire	ext_irq = i_meip & mie_meie;
+   wire  irq = (timer_irq | ext_irq) & mstatus_mie;
 
    assign mcause = i_cnt0to3 ? mcause3_0[B:0] : //[3:0]
 		   i_cnt_done ? {mcause31,{B{1'b0}}} //[31]
@@ -95,12 +96,15 @@ module serv_csr
 
    always @(posedge i_clk) begin
       if (i_trig_irq) begin
-	 timer_irq_r <= timer_irq;
-	 o_new_irq <= (timer_irq & !timer_irq_r);
+	 irq_r <= irq;
+	 o_new_irq <= (irq & !irq_r);
       end
 
       if (i_mie_en & i_cnt7)
-	mie_mtie <= csr_in[B];
+	      mie_mtie <= csr_in[B];
+
+      if(i_mie_en & i_cnt11)
+         mie_meie <= csr_in[B];
 
       /*
        The mie bit in mstatus gets updated under three conditions
@@ -139,14 +143,15 @@ module serv_csr
        or misaligned jump (0)
 
        The expressions below are derived from the following truth table
-       irq  => 0111 (timer=7)
+       timer_irq  => 0111 (timer=7)
+       ext_irq    => 1011
        e_op => x011 (ebreak=3, ecall=11)
        mem  => 01x0 (store=6, load=4)
        ctrl => 0000 (jump=0)
        */
       if (i_mcause_en & i_en & i_cnt0to3 | (i_trap & i_cnt_done)) begin
-	 mcause3_0[3] <= (i_e_op & !i_ebreak) | (!i_trap & csr_in[B]);
-	 mcause3_0[2] <= o_new_irq | i_mem_op | (!i_trap & ((W == 1) ? mcause3_0[3] : csr_in[(W == 1) ? 0 : 2]));
+	 mcause3_0[3] <= (o_new_irq & !timer_irq) | (i_e_op & !i_ebreak) | (!i_trap & csr_in[B]);
+	 mcause3_0[2] <= (o_new_irq & timer_irq) | i_mem_op | (!i_trap & ((W == 1) ? mcause3_0[3] : csr_in[(W == 1) ? 0 : 2]));
 	 mcause3_0[1] <= o_new_irq | i_e_op | (i_mem_op & i_mem_cmd) | (!i_trap & ((W == 1) ? mcause3_0[2] : csr_in[(W == 1) ? 0 : 1]));
 	 mcause3_0[0] <= o_new_irq | i_e_op | (!i_trap & ((W == 1) ? mcause3_0[1] : csr_in[0]));
       end
