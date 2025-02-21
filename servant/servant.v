@@ -36,6 +36,7 @@ module servant
    localparam	   rf_l2d   = $clog2((32+csr_regs)*32/rf_width);
 
    wire 	timer_irq;
+   wire   external_irq;
 
 
    wire [31:0]      wb_mem_adr;
@@ -154,6 +155,7 @@ module servant
       .i_clk        (wb_clk),
       .i_rst        (wb_rst),
       .i_timer_irq  (timer_irq),
+      .i_external_irq (external_irq),
 
       .o_wb_mem_adr   (wb_mem_adr),
       .o_wb_mem_dat   (wb_mem_dat),

@@ -16,6 +16,7 @@ module serv_top
    input wire		      clk,
    input wire		      i_rst,
    input wire		      i_timer_irq,
+   input wire         i_external_irq,
 `ifdef RISCV_FORMAL
    output wire		      rvfi_valid,
    output wire [63:0]	      rvfi_order,
@@ -184,7 +185,7 @@ module serv_top
    wire [31:0] wb_ibus_rdt;
    wire        wb_ibus_ack;
 
-   wire	       external_irq;
+   
 
    generate
       if (ALIGN) begin : gen_align
@@ -561,7 +562,7 @@ module serv_top
 	    .i_cnt_done   (cnt_done),
 	    .i_mem_op     (!mtval_pc),
 	    .i_mtip       (i_timer_irq),
-	    .i_meip       (external_irq),
+	    .i_meip       (i_external_irq),
 	    .i_trap       (trap),
 	    .o_new_irq    (new_irq),
 	    //Control

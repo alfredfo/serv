@@ -26,6 +26,7 @@ module servile
    input wire		      i_clk,
    input wire		      i_rst,
    input wire		      i_timer_irq,
+   input wire         i_external_irq,
 
    //Memory (WB) interface
    output wire [31:0]	      o_wb_mem_adr,
@@ -224,6 +225,7 @@ module servile
       .clk         (i_clk),
       .i_rst       (i_rst),
       .i_timer_irq (i_timer_irq),
+      .i_external_irq (i_external_irq),
 
 `ifdef RISCV_FORMAL
       .rvfi_valid     (),
