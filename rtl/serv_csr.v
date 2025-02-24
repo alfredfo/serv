@@ -161,6 +161,7 @@ module serv_csr
 	if (RESET_STRATEGY != "NONE") begin
 	   o_new_irq <= 1'b0;
 	   mie_mtie <= 1'b0;
+      mie_meie <= 1'b0;
 	end
    end
 
