@@ -2,6 +2,7 @@
 module servant
 (
  input wire  wb_clk,
+ input wire  timer_clk,
  input wire  wb_rst,
  output wire q);
 
@@ -114,13 +115,14 @@ module servant
      #(.RESET_STRATEGY (reset_strategy),
        .WIDTH (32))
    timer
-     (.i_clk    (wb_clk),
-      .i_rst    (wb_rst),
-      .o_irq    (timer_irq),
-      .i_wb_cyc (wb_timer_stb),
-      .i_wb_we  (wb_timer_we) ,
-      .i_wb_dat (wb_timer_dat),
-      .o_wb_dat (wb_timer_rdt));
+     (.i_clk       (wb_clk),
+      .i_timer_clk (timer_clk),
+      .i_rst       (wb_rst),
+      .o_irq       (timer_irq),
+      .i_wb_cyc    (wb_timer_stb),
+      .i_wb_we     (wb_timer_we),
+      .i_wb_dat    (wb_timer_dat),
+      .o_wb_dat    (wb_timer_rdt));
 
    servant_gpio gpio
      (.i_wb_clk (wb_clk),

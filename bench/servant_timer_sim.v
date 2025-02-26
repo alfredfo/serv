@@ -2,6 +2,7 @@
 module servant_timer_sim
   (input wire	      wb_clk,
    input wire	      wb_rst,
+   input wire	      timer_clk,
    output wire [31:0] pc_adr,
    output wire	      pc_vld,
    output wire	      q,
@@ -33,7 +34,7 @@ module servant_timer_sim
        .with_csr (with_csr),
        .compress (compressed[0:0]),
        .align    (align[0:0]))
-   dut(wb_clk, wb_rst, q);
+   dut(wb_clk, timer_clk, wb_rst, q);
 
    assign pc_adr = dut.wb_mem_adr;
    assign pc_vld = dut.wb_mem_ack;

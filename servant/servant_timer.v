@@ -3,13 +3,14 @@ module servant_timer
   #(parameter WIDTH = 16,
     parameter RESET_STRATEGY = "",
     parameter DIVIDER = 0)
-  (input wire 	     i_clk,
-   input wire 	     i_rst,
-   output reg 	     o_irq,
-   input wire [31:0] i_wb_dat,
-   input wire 	     i_wb_we,
-   input wire 	     i_wb_cyc,
-   output reg [31:0] o_wb_dat);
+   (input wire	      i_clk,
+    input wire	      i_timer_clk,
+    input wire	      i_rst,
+    output reg	      o_irq,
+    input wire [31:0] i_wb_dat,
+    input wire	      i_wb_we,
+    input wire	      i_wb_cyc,
+    output reg [31:0] o_wb_dat);
 
    localparam HIGH = WIDTH-1-DIVIDER;
 
@@ -23,15 +24,23 @@ module servant_timer
       o_wb_dat[HIGH:0] = mtimeslice;
    end
 
-   always @(posedge i_clk) begin
-      if (i_wb_cyc & i_wb_we)
-	mtimecmp <= i_wb_dat[HIGH:0];
+   always @(posedge i_timer_clk) begin
       mtime <= mtime + 'd1;
       o_irq <= (mtimeslice - mtimecmp >= 0);
       if (RESET_STRATEGY != "NONE")
 	if (i_rst) begin
 	   mtime <= 0;
-	   mtimecmp <= 0;
 	end
+   end
+
+   always @(posedge i_clk) begin
+      if (i_wb_cyc & i_wb_we) begin
+	 mtimecmp <= i_wb_dat[HIGH:0];
+      end
+      if (RESET_STRATEGY != "NONE") begin
+	 if (i_rst) begin	    
+	    mtimecmp <= 0;
+	 end
+      end
    end
 endmodule
