@@ -68,7 +68,9 @@ int main(int argc, char **argv, char **env)
     clock++;
     top->wb_rst = main_time < 100;
     top->eval();
-    tfp->dump(main_time);
+    if (tfp) {
+      tfp->dump(main_time);
+    }
     if (top->wb_clk && top->pc_vld && top->pc_adr) {
       std::this_thread::sleep_for(std::chrono::milliseconds(500));
       printf("%d\n", top->pc_adr);
@@ -86,7 +88,8 @@ int main(int argc, char **argv, char **env)
     top->wb_clk = !top->wb_clk;
     main_time+=31.25;
   }
-  if (tfp)
+  if (tfp) {
     tfp->close();
+  }
   exit(0);
 }
