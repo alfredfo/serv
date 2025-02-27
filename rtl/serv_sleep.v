@@ -12,11 +12,14 @@ module serv_sleep
 
     output wire     o_clk_halt);
 
-    wire irq;
+
+// Alternative version:
+//    assign o_clk_halt = i_sleep_request & !(i_timer_irq | i_external_irq);   
+
+
     reg clk_halt;
-    
-    assign irq = i_timer_irq & i_external_irq;
-    assign o_clk_halt = clk_halt & !irq;
+
+    assign o_clk_halt = clk_halt & !(i_timer_irq | i_external_irq);
 
     always @(posedge i_clk) begin
       clk_halt <= i_sleep_request;
@@ -26,5 +29,6 @@ module serv_sleep
         clk_halt <= 0;
       end
     end
+
 
 endmodule
