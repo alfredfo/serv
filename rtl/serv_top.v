@@ -72,6 +72,10 @@ module serv_top
    input wire [31:0]	      i_ext_rd,
    output wire [31:0]	      o_ext_rs1,
    output wire [31:0]	      o_ext_rs2,
+
+   // Sleep functionality
+   output wire          o_clk_halt,
+   
    //MDU
    output wire		      o_mdu_valid);
 
@@ -225,6 +229,22 @@ module serv_top
          assign iscomp   =  1'b0;
       end
    endgenerate
+
+
+  serv_sleep 
+    #(.RESET_STRATEGY (RESET_STRATEGY))
+    sleep
+      (
+      .i_clk            (clk),
+      .i_rst            (i_rst),
+      .i_timer_irq      (i_timer_irq),
+      .i_external_irq   (i_external_irq),
+      .i_sleep_request  (0'b0),
+      .o_clk_halt       (o_clk_halt)
+    );
+
+
+
 
    serv_state
      #(.RESET_STRATEGY (RESET_STRATEGY),

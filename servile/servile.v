@@ -99,6 +99,9 @@ module servile
    wire			   mdu_ready;
 
    wire			   ei_irq;
+
+   wire   clk_halt;
+
    servile_mux
      #(.sim (sim))
    mux
@@ -279,6 +282,9 @@ module servile
       .o_dbus_cyc  (wb_dbus_stb),
       .i_dbus_rdt  (wb_dbus_rdt),
       .i_dbus_ack  (wb_dbus_ack),
+
+      // Sleep
+      .o_clk_halt  (clk_halt),
 
       //Extension IF
       .o_ext_rs1    (mdu_rs1),
