@@ -1,6 +1,7 @@
 `default_nettype none
 module servant_external_sim
   (input wire	      wb_clk,
+   input wire	      timer_clk,
    input wire	      wb_rst,
    output wire [31:0] pc_adr,
    output wire	      pc_vld,
@@ -31,7 +32,7 @@ module servant_external_sim
        .with_csr (with_csr),
        .compress (compressed[0:0]),
        .align    (align[0:0]))
-   dut(wb_clk, wb_rst, q);
+   dut(wb_clk, timer_clk, wb_rst, q);
 
    assign pc_adr = dut.wb_mem_adr;
    assign pc_vld = dut.wb_mem_ack;
