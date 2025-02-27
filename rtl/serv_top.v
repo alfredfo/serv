@@ -93,6 +93,7 @@ module serv_top
    wire 	 two_stage_op;
    wire 	 e_op;
    wire 	 ebreak;
+   wire    wfi_en;
    wire 	 branch_op;
    wire 	 shift_op;
    wire 	 rd_op;
@@ -325,6 +326,7 @@ module serv_top
       .o_dbus_en          (dbus_en),
       .o_e_op             (e_op),
       .o_ebreak           (ebreak),
+      .o_wfi_en           (wfi_en),
       .o_branch_op        (branch_op),
       .o_shift_op         (shift_op),
       .o_rd_op            (rd_op),
