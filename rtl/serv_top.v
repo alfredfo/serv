@@ -240,6 +240,7 @@ module serv_top
       .i_timer_irq      (i_timer_irq),
       .i_external_irq   (i_external_irq),
       .i_sleep_request  (0'b0),
+      .i_cnt_done       (cnt_done),
       .o_clk_halt       (o_clk_halt)
     );
 
