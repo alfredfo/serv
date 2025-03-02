@@ -84,7 +84,8 @@ module serv_rf_top
    input wire	      i_ext_ready,
 
    // Sleep functionality
-   output wire    o_clk_halt,
+   output wire          o_sleep_req,
+   output wire          o_wakeup_req,
 
    // MDU
    output wire	      o_mdu_valid);
@@ -220,7 +221,9 @@ module serv_rf_top
       .i_dbus_ack   (i_dbus_ack),
 
       // Sleep
-      .o_clk_halt   (o_clk_halt),
+      .o_sleep_req      (o_sleep_req),
+      .o_wakeup_req     (o_wakeup_req),
+      
 
       //Extension
       .o_ext_funct3 (o_ext_funct3),

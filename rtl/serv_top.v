@@ -74,7 +74,8 @@ module serv_top
    output wire [31:0]	      o_ext_rs2,
 
    // Sleep functionality
-   output wire          o_clk_halt,
+   output wire          o_sleep_req,
+   output wire          o_wakeup_req,
    
    //MDU
    output wire		      o_mdu_valid);
@@ -239,9 +240,10 @@ module serv_top
       .i_rst            (i_rst),
       .i_timer_irq      (i_timer_irq),
       .i_external_irq   (i_external_irq),
-      .i_sleep_request  (0'b0),
+      .i_wfi            (0'b0),
       .i_cnt_done       (cnt_done),
-      .o_clk_halt       (o_clk_halt)
+      .o_sleep_req      (o_sleep_req),
+      .o_wakeup_req     (o_wakeup_req)
     );
 
 

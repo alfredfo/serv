@@ -100,7 +100,8 @@ module servile
 
    wire			   ei_irq;
 
-   wire   clk_halt;
+   wire   sleep_req;
+   wire   wakeup_req;
 
    servile_mux
      #(.sim (sim))
@@ -284,7 +285,8 @@ module servile
       .i_dbus_ack  (wb_dbus_ack),
 
       // Sleep
-      .o_clk_halt  (clk_halt),
+      .o_sleep_req      (sleep_req),
+      .o_wakeup_req     (wakeup_req),
 
       //Extension IF
       .o_ext_rs1    (mdu_rs1),
