@@ -132,11 +132,10 @@ module serv_decode
    wire csr_op = opcode[4] & opcode[2] & (|funct3);
 
 
-   // ÄNDRA DENNA KOMMENTAR
    //op20
    wire co_ebreak = op20 & !op22;
-   // onödigt många villkor?
-   wire co_wfi_en = opcode[4] & opcode[2] & op20 & !op21 & op22 & op28 & !(|funct3);
+   
+   wire co_wfi_en = opcode[4] & opcode[2] & op20 & op22 & op28 & !(|funct3);
 
 
    //opcode & funct3 & op21
