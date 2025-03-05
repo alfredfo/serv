@@ -18,6 +18,7 @@ void INThandler(int signal) {
   done = true;
 }
 
+void test_instruction(Vdecoder_sim *, const char *, uint32_t);
 void cycle(Vdecoder_sim *);
 
 int main(int argc, char **argv, char **env) {
@@ -64,40 +65,9 @@ int main(int argc, char **argv, char **env) {
     }
     if (top->wb_clk) {
       std::this_thread::sleep_for(std::chrono::milliseconds(500));
-
-      printf("testing jalr\n");
-      uint32_t jalr_instr = 0x0000006F;// 0x00008067;
-      top->wb_rdt = jalr_instr >> 2;
-      top->wb_en = 1;
-      cycle(top);
-      printf("jal_or_jalr: %d\n", top->jal_or_jalr);
-      printf("mret: %d\n", top->mret);
-      printf("ebreak %d\n", top->ebreak);	    
-      cycle(top);
-      printf("\n");
-
-      printf("testing mret\n");
-      uint32_t mret_instr = 0x30200073;
-      top->wb_rdt = mret_instr >> 2;
-      top->wb_en = 1;
-      cycle(top);
-      printf("jal_or_jalr: %d\n", top->jal_or_jalr);
-      printf("mret: %d\n", top->mret);
-      printf("ebreak %d\n", top->ebreak);	    
-      cycle(top);
-      printf("\n");
-
-
-      printf("testing ebreak\n");
-      uint32_t ebreak_instr = 0x00100073;
-      top->wb_rdt = ebreak_instr >> 2;
-      top->wb_en = 1;
-      cycle(top);
-      printf("jal_or_jalr: %d\n", top->jal_or_jalr);
-      printf("mret: %d\n", top->mret);
-      printf("ebreak %d\n", top->ebreak);	    
-      cycle(top);
-      printf("\n");
+      test_instruction(top, "jalr", 0x0000006F);
+      test_instruction(top, "mret", 0x30200073);
+      test_instruction(top, "ebreak", 0x00100073);
     }
     if (timeout && (main_time >= timeout)) {
       printf("Timeout: Exiting at time %lu\n", main_time);
@@ -120,4 +90,17 @@ void cycle(Vdecoder_sim *top) {
   top->eval();
   top->wb_clk = 1;
   top->eval();
+}
+
+void test_instruction(Vdecoder_sim *top, const char *instr_name, uint32_t instr) {
+  printf("testing %s\n", instr_name);
+  top->wb_rdt = jalr_instr >> 2;
+  top->wb_en = 1;
+  cycle(top);
+  printf("jal_or_jalr: %d\n", top->jal_or_jalr);
+  printf("mret: %d\n", top->mret);
+  printf("ebreak %d\n", top->ebreak);
+  top->wb_en = 0;
+  cycle(top);
+  printf("\n");
 }

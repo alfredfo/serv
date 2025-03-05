@@ -5,7 +5,8 @@ module decoder_sim
    input wire	     wb_en,
    output wire	     ebreak,
    output wire	     jal_or_jalr,
-   output wire	     mret
+   output wire	     mret,
+   output wire	     wfi
 );
 
    // Instantiate the DUT
@@ -67,5 +68,6 @@ module decoder_sim
    assign jal_or_jalr = dut.o_ctrl_jal_or_jalr;
    assign ebreak = dut.o_ebreak;
    assign mret = dut.o_ctrl_mret;
+   assign wfi = dut.o_wfi;
 
 endmodule
