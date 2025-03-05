@@ -6,9 +6,8 @@ module servant_interrupt_sim
    output wire [31:0] pc_adr,
    output wire	      pc_vld,
    output wire	      q,
-   output wire	      timer_irq,
-   output wire	      mie_mtie,
-   output wire	      isjump
+   output wire [3:0]  mcause3_0,
+   output wire	      new_irq
 );
 
    parameter memfile = "";
@@ -38,8 +37,7 @@ module servant_interrupt_sim
 
    assign pc_adr = dut.wb_mem_adr;
    assign pc_vld = dut.wb_mem_ack;
-   assign timer_irq = dut.timer_irq;
-   assign mie_mtie = dut.cpu.cpu.mret;
-   assign isjump = dut.cpu.cpu.jump;  
+   assign new_irq = dut.cpu.cpu.new_irq;
+   assign mcause3_0 = dut.cpu.cpu.gen_csr.csr.mcause3_0;  
 
 endmodule

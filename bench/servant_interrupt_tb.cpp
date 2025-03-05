@@ -11,7 +11,7 @@ using namespace std;
 
 static bool done;
 
-#define TIMER_CLK_DIV 7
+#define TIMER_CLK_DIV 3
 
 vluint64_t main_time = 0;       // Current simulation time
 // This is a 64-bit integer to reduce wrap over issues and
@@ -22,16 +22,16 @@ double sc_time_stamp () {       // Called by $time in Verilog
   // what SystemC does
 }
 
-void INThandler(int signal)
-{
+void INThandler(int signal) {
   printf("\nCaught ctrl-c\n");
   done = true;
 }
 
-int main(int argc, char **argv, char **env)
-{
-  int baud_rate = 0;
+int reset(Vservant_interrupt_sim *, VerilatedVcd *)
+int timer_test(Vservant_interrupt_sim *, VerilatedVcdC *, vluint64_t);
+int external_test(Vservant_interrupt_sim *, VerilatedVcdC *, vluint64_t);
 
+int main(int argc, char **argv, char **env) {
   Verilated::commandArgs(argc, argv);
 
   Vservant_interrupt_sim* top = new Vservant_interrupt_sim;
@@ -63,8 +63,36 @@ int main(int argc, char **argv, char **env)
 
   top->wb_clk = 1;
   top->timer_clk = 1;
-  printf("timer irq, %d\n", top->timer_irq);
   bool q = top->q;
+  int clock = 0;
+  timer_test(top, tfp, timeout);
+  reset(top, tfp);
+  timer_test(top, tfp, timeout);
+  if (tfp) {
+    tfp->close();
+  }
+  exit(0);
+}
+
+
+int reset(Vservant_interrupt_sim *top, VerilatedVcd *tfp) {
+    top->wb_rst = 1;
+    for (int i = 0; i < 10; i++) {
+        top->wb_clk = !top->wb_clk;
+        top->eval();
+        if (tfp) {
+            tfp->dump(main_time);
+        }
+    }
+    top->wb_rst = 0;
+    return 0;
+}
+
+int external_test(Vservant_interrupt_sim *top, VerilatedVcdC *tfp, vluint64_t timeout) {
+  int clock = 0;
+}
+
+int timer_test(Vservant_interrupt_sim *top, VerilatedVcdC *tfp, vluint64_t timeout) {
   int clock = 0;
   while (!(done || Verilated::gotFinish())) {
     clock++;
@@ -84,13 +112,6 @@ int main(int argc, char **argv, char **env)
     top->wb_clk = !top->wb_clk;
     top->timer_clk = ((clock % TIMER_CLK_DIV) <= (TIMER_CLK_DIV / 2));
 
-    // 4177
-    // top->timer_clk = top->wb_clk; // 2107
-    // printf("%d | %d\n", top->wb_clk, top->timer_clk);
     main_time+=31.25;
   }
-  if (tfp) {
-    tfp->close();
-  }
-  exit(0);
 }
