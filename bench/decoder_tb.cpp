@@ -68,6 +68,7 @@ int main(int argc, char **argv, char **env) {
       test_instruction(top, "jalr", 0x0000006F);
       test_instruction(top, "mret", 0x30200073);
       test_instruction(top, "ebreak", 0x00100073);
+      test_instruction(top, "wfi", 0x10500073);
     }
     if (timeout && (main_time >= timeout)) {
       printf("Timeout: Exiting at time %lu\n", main_time);
@@ -100,6 +101,7 @@ void test_instruction(Vdecoder_sim *top, const char *instr_name, uint32_t instr)
   printf("jal_or_jalr: %d\n", top->jal_or_jalr);
   printf("mret: %d\n", top->mret);
   printf("ebreak %d\n", top->ebreak);
+  printf("wfi %d\n", top->wfi);
   top->wb_en = 0;
   cycle(top);
   printf("\n");

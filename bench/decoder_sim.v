@@ -23,6 +23,7 @@ module decoder_sim
        .o_cond_branch(),
        .o_e_op(),
        .o_ebreak(),
+       .o_wfi(),
        .o_branch_op(),
        .o_shift_op(),
        .o_slt_or_branch(),
