@@ -13,7 +13,7 @@ module serv_decode
    output reg       o_cond_branch,
    output reg       o_e_op,
    output reg       o_ebreak,
-   output reg       o_wfi_en,
+   output reg       o_wfi,
    output reg       o_branch_op,
    output reg       o_shift_op,
    output reg       o_rd_op,
@@ -135,7 +135,7 @@ module serv_decode
    //op20
    wire co_ebreak = op20 & !op22;
    
-   wire co_wfi_en = opcode[4] & opcode[2] & op20 & op22 & op28 & !(|funct3);
+   wire co_wfi = opcode[4] & opcode[2] & op20 & op22 & op28 & !(|funct3);
 
 
    //opcode & funct3 & op21
@@ -259,7 +259,7 @@ module serv_decode
 	         o_two_stage_op     = co_two_stage_op;
             o_e_op             = co_e_op;
             o_ebreak           = co_ebreak;
-            o_wfi_en           = co_wfi_en;
+            o_wfi           = co_wfi;
             o_branch_op        = co_branch_op;
             o_shift_op         = co_shift_op;
             o_rd_op            = co_rd_op;
@@ -319,7 +319,7 @@ module serv_decode
                o_cond_branch      <= co_cond_branch;
                o_e_op             <= co_e_op;
                o_ebreak           <= co_ebreak;
-               o_wfi_en           <= co_wfi_en;
+               o_wfi           <= co_wfi;
                o_two_stage_op     <= co_two_stage_op;
                o_dbus_en          <= co_dbus_en;
                o_mtval_pc         <= co_mtval_pc;
