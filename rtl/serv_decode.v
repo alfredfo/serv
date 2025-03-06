@@ -257,10 +257,10 @@ module serv_decode
             o_cond_branch      = co_cond_branch;
             o_dbus_en          = co_dbus_en;
             o_mtval_pc         = co_mtval_pc;
-	         o_two_stage_op     = co_two_stage_op;
+	    o_two_stage_op     = co_two_stage_op;
             o_e_op             = co_e_op;
             o_ebreak           = co_ebreak;
-            o_wfi           = co_wfi;
+            o_wfi              = co_wfi;
             o_branch_op        = co_branch_op;
             o_shift_op         = co_shift_op;
             o_rd_op            = co_rd_op;
