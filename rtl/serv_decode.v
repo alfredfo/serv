@@ -69,7 +69,6 @@ module serv_decode
    reg        op21;
    reg        op22;
    reg        op26;
-   reg        op28;
 
    reg       imm25;
    reg       imm30;
@@ -136,15 +135,15 @@ module serv_decode
    //op20
    wire co_ebreak = op20 & !op22;
    
-   wire co_wfi = opcode[4] & opcode[2] & op20 & op22 & op28 & !(|funct3);
+   wire co_wfi = opcode[4] & opcode[2] & op22 & !(|funct3);
 
 
    //opcode & funct3 & op21
 
    wire co_ctrl_mret = opcode[4] & opcode[2] & op21 & !(|funct3);
    //Matches system opcodes except CSR accesses (funct3 == 0)
-   //and mret (!op21) and wfi (!op22 | !op28)
-   wire co_e_op = opcode[4] & opcode[2] & !op21 & (!op22 | !op28) & !(|funct3);
+   //and mret (!op21) and wfi (!op22)
+   wire co_e_op = opcode[4] & opcode[2] & !op21 & !op22 & !(|funct3);
 
    //opcode & funct3 & imm30
 
@@ -247,7 +246,6 @@ module serv_decode
                op21   <= i_wb_rdt[21];
                op22   <= i_wb_rdt[22];
                op26   <= i_wb_rdt[26];
-               op28   <= i_wb_rdt[28];
             end
          end
 
@@ -310,7 +308,6 @@ module serv_decode
             op21    = i_wb_rdt[21];
             op22    = i_wb_rdt[22];
             op26    = i_wb_rdt[26];
-            op28    = i_wb_rdt[28];
          end
 
          always @(posedge clk) begin
