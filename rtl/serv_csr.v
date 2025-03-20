@@ -134,8 +134,8 @@ module serv_csr
        During an mcause CSR access function, they are assigned when
        bits 0 to 3 gets updated
 
-       During an external interrupt the exception code is set to
-       7, since SERV only support timer interrupts
+       During an interrupt, the exception code is assigned to indicate
+       if it was caused by a timer interrupt (7) or an external interrupt (11).
 
        During an exception, the exception code is assigned to indicate
        if it was caused by an ebreak instruction (3),
