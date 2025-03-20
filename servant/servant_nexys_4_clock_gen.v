@@ -2,12 +2,16 @@
 module servant_nexys_4_clock_gen
   (input wire  i_clk,
    input wire  i_rst,
-   output wire o_clk,
+   input wire  i_clk0_en,
+   input wire  i_clk1_en,
+   output wire o_clk0,
+   output wire o_clk1,
    output reg  o_rst);
 
    wire   clkfb;
    wire   locked;
    wire   pll_rst;
+   wire   pll_clk;
    reg 	  locked_r;
 
    assign pll_rst = !i_rst;
@@ -24,15 +28,30 @@ module servant_nexys_4_clock_gen
    pll
      (.CLKIN1   (i_clk),
       .RST      (pll_rst),
-      .CLKOUT0  (o_clk),
+      .CLKOUT0  (pll_clk),
       .LOCKED   (locked),
       .CLKFBOUT (clkfb),
       .CLKFBIN  (clkfb));
 
-   always @(posedge o_clk) begin
+  always @(posedge pll_clk) begin
       locked_r <= locked;
       o_rst  <= !locked_r;
-   end
+  end
+  
+  BUFGCE clk0_buf
+  (
+    .I (pll_clk),
+    .O (o_clk0),
+    .CE (i_clk0_en));
+
+  BUFGCE clk1_buf
+  (
+    .I (pll_clk),
+    .O (o_clk1),
+    .CE (i_clk0_en));
+
+
+   
 
 endmodule
 `default_nettype wire

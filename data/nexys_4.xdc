@@ -2,6 +2,9 @@
 set_property -dict { PACKAGE_PIN E3   IOSTANDARD LVCMOS33 } [get_ports { i_clk }];
 create_clock -add -name sys_clk_pin -period 10 -waveform {0 5} [get_ports { i_clk }];
 
+## External interrupt (to BTNL)
+set_property -dict { PACKAGE_PIN T16   IOSTANDARD LVCMOS33 } [get_ports {ext_irq}];
+
 ## LEDs
 set_property -dict { PACKAGE_PIN T8   IOSTANDARD LVCMOS33 } [get_ports { q }];
 

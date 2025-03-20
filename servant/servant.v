@@ -4,8 +4,10 @@ module servant
  input wire  wb_clk,
  input wire  timer_clk,
  input wire  wb_rst,
- output wire q);
-
+ output wire q,
+ output wire o_sleep_req,
+ output wire o_wakeup_req);
+ 
    parameter memfile = "zephyr_hello.hex";
    parameter memsize = 8192;
    parameter reset_strategy = "MINI";
@@ -158,6 +160,8 @@ module servant
       .i_rst        (wb_rst),
       .i_timer_irq  (timer_irq),
       .i_external_irq (external_irq),
+      .o_wakeup_req (o_wakeup_req),
+      .o_sleep_req  (o_sleep_req),
 
       .o_wb_mem_adr   (wb_mem_adr),
       .o_wb_mem_dat   (wb_mem_dat),

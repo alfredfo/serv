@@ -28,6 +28,9 @@ module servile
    input wire		      i_timer_irq,
    input wire         i_external_irq,
 
+   output wire        o_sleep_req,
+   output wire        o_wakeup_req,
+
    //Memory (WB) interface
    output wire [31:0]	      o_wb_mem_adr,
    output wire [31:0]	      o_wb_mem_dat,
@@ -99,9 +102,6 @@ module servile
    wire			   mdu_ready;
 
    wire			   ei_irq;
-
-   wire   sleep_req;
-   wire   wakeup_req;
 
    servile_mux
      #(.sim (sim))
@@ -231,6 +231,7 @@ module servile
       .i_timer_irq (i_timer_irq),
       .i_external_irq (i_external_irq),
 
+
 `ifdef RISCV_FORMAL
       .rvfi_valid     (),
       .rvfi_order     (),
@@ -285,8 +286,8 @@ module servile
       .i_dbus_ack  (wb_dbus_ack),
 
       // Sleep
-      .o_sleep_req      (sleep_req),
-      .o_wakeup_req     (wakeup_req),
+      .o_sleep_req      (o_sleep_req),
+      .o_wakeup_req     (o_wakeup_req),
 
       //Extension IF
       .o_ext_rs1    (mdu_rs1),
