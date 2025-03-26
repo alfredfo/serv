@@ -1,5 +1,5 @@
 `default_nettype none
-module servant_nexys_4_clock_gen
+module servant_nexys_a7_clock_gen
   (input wire  i_clk,
    input wire  i_rst,
    input wire  i_clk0_en,

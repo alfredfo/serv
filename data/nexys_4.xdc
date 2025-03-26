@@ -9,7 +9,7 @@ set_property -dict { PACKAGE_PIN T16   IOSTANDARD LVCMOS33 } [get_ports {ext_irq
 set_property -dict { PACKAGE_PIN T8   IOSTANDARD LVCMOS33 } [get_ports { q }];
 
 ## UART
-set_property -dict { PACKAGE_PIN C4   IOSTANDARD LVCMOS33 } [get_ports { o_uart_tx }];
+set_property -dict { PACKAGE_PIN D4   IOSTANDARD LVCMOS33 } [get_ports { o_uart_tx }];
 
 set_property -dict { PACKAGE_PIN C12   IOSTANDARD LVCMOS33 } [get_ports { i_rst }]; # ACTIVE LOW !!!
 
