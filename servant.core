@@ -63,6 +63,12 @@ filesets:
     file_type : verilogSource
     depend : [servile, "mdu? (mdu)", "ei? (ei)"]
 
+  sleep_dummy:
+    files:
+      - servant/servant_sleep_dummy.v
+    file_type : verilogSource
+    depend : [servile]
+
   verilator_tb:
     files:
       - bench/servant_sim.v
@@ -795,7 +801,7 @@ targets:
 
   verilator_interrupt_tb:
     description: Verilator interrupt testbench
-    filesets : [soc, verilator_interrupt_tb]
+    filesets : [soc, sleep_dummy, verilator_interrupt_tb]
     flow: sim
     flow_options:
       tool: verilator

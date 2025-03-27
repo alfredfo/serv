@@ -62,7 +62,6 @@ int main(int argc, char **argv, char **env) {
   std::time_t last_time = std::time(nullptr);
 
   top->wb_clk = 1;
-  top->timer_clk = 1;
   bool q = top->q;
   int clock = 0;
   timer_test(top, tfp, timeout);
@@ -110,8 +109,6 @@ int timer_test(Vservant_interrupt_sim *top, VerilatedVcdC *tfp, vluint64_t timeo
       done = true;
     }
     top->wb_clk = !top->wb_clk;
-    top->timer_clk = ((clock % TIMER_CLK_DIV) <= (TIMER_CLK_DIV / 2));
-
     main_time+=31.25;
   }
 }

@@ -7,7 +7,7 @@ module servant
  output wire q,
  output wire o_sleep_req,
  output wire o_wakeup_req);
- 
+
    parameter memfile = "zephyr_hello.hex";
    parameter memsize = 8192;
    parameter reset_strategy = "MINI";

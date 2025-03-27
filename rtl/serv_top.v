@@ -16,7 +16,7 @@ module serv_top
    input wire		      clk,
    input wire		      i_rst,
    input wire		      i_timer_irq,
-   input wire         i_external_irq,
+   input wire		      i_external_irq,
 `ifdef RISCV_FORMAL
    output wire		      rvfi_valid,
    output wire [63:0]	      rvfi_order,
@@ -74,9 +74,9 @@ module serv_top
    output wire [31:0]	      o_ext_rs2,
 
    // Sleep functionality
-   output wire          o_sleep_req,
-   output wire          o_wakeup_req,
-   
+   output wire		      o_sleep_req,
+   output wire		      o_wakeup_req,
+
    //MDU
    output wire		      o_mdu_valid);
 
@@ -193,7 +193,6 @@ module serv_top
 
    wire	       mie_meie;
    wire	       mie_mtie;
-   
 
    generate
       if (ALIGN) begin : gen_align
@@ -239,16 +238,14 @@ module serv_top
      #(.RESET_STRATEGY (RESET_STRATEGY))
    sleep
      (
-      .i_clk            (clk),
-      .i_rst            (i_rst),
       .i_timer_irq      (i_timer_irq),
       .i_external_irq   (i_external_irq),
-      .i_wfi            (0'b0),
       .i_cnt_done       (cnt_done),
+      .i_wfi            (wfi),
       .o_sleep_req      (o_sleep_req),
       .o_wakeup_req     (o_wakeup_req),
-      .i_meie (mie_meie),
-      .i_mtie (mie_mtie));
+      .i_meie           (mie_meie),
+      .i_mtie           (mie_mtie));
 
    serv_state
      #(.RESET_STRATEGY (RESET_STRATEGY),
