@@ -191,6 +191,8 @@ module serv_top
    wire [31:0] wb_ibus_rdt;
    wire        wb_ibus_ack;
 
+   wire	       mie_meie;
+   wire	       mie_mtie;
    
 
    generate
@@ -233,10 +235,10 @@ module serv_top
    endgenerate
 
 
-  serv_sleep 
-    #(.RESET_STRATEGY (RESET_STRATEGY))
-    sleep
-      (
+   serv_sleep
+     #(.RESET_STRATEGY (RESET_STRATEGY))
+   sleep
+     (
       .i_clk            (clk),
       .i_rst            (i_rst),
       .i_timer_irq      (i_timer_irq),
@@ -244,11 +246,9 @@ module serv_top
       .i_wfi            (0'b0),
       .i_cnt_done       (cnt_done),
       .o_sleep_req      (o_sleep_req),
-      .o_wakeup_req     (o_wakeup_req)
-    );
-
-
-
+      .o_wakeup_req     (o_wakeup_req),
+      .i_meie (mie_meie),
+      .i_mtie (mie_mtie));
 
    serv_state
      #(.RESET_STRATEGY (RESET_STRATEGY),
@@ -605,7 +605,9 @@ module serv_top
 	    .o_csr_in     (csr_in),
 	    .i_csr_imm    (csr_imm),
 	    .i_rs1        (rs1),
-	    .o_q          (csr_rd));
+	    .o_q          (csr_rd),
+	    .o_meie (mie_meie),
+	    .o_mtie (mie_mtie));
       end else begin : gen_no_csr
 	 assign csr_in = {W{1'b0}};
 	 assign csr_rd = {W{1'b0}};

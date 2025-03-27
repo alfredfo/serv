@@ -37,7 +37,9 @@ module serv_csr
    output wire [B:0] o_csr_in,
    input wire [B:0]  i_csr_imm,
    input wire [B:0]  i_rs1,
-   output wire [B:0] o_q);
+   output wire [B:0] o_q,
+   output wire o_meie,
+   output wire o_mtie);
 
    localparam [1:0]
      CSR_SOURCE_CSR = 2'b00,
@@ -47,9 +49,11 @@ module serv_csr
 
    reg 		    mstatus_mie;
    reg 		    mstatus_mpie;
-   reg 		    mie_mtie;
+   reg		    mie_mtie;
    reg 		    mie_meie;
 
+   assign o_meie = mie_meie;
+   assign o_mtie = mie_mtie;
 
    reg 		mcause31;
    reg [3:0] 	mcause3_0;
