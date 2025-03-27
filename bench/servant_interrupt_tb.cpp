@@ -27,7 +27,7 @@ void INThandler(int signal) {
   done = true;
 }
 
-int reset(Vservant_interrupt_sim *, VerilatedVcd *)
+int reset(Vservant_interrupt_sim *, VerilatedVcdC *);
 int timer_test(Vservant_interrupt_sim *, VerilatedVcdC *, vluint64_t);
 int external_test(Vservant_interrupt_sim *, VerilatedVcdC *, vluint64_t);
 
