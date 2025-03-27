@@ -50,8 +50,5 @@ module servant_nexys_4_clock_gen
     .O (o_clk1),
     .CE (i_clk0_en));
 
-
-   
-
 endmodule
 `default_nettype wire
