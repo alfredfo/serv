@@ -5,7 +5,8 @@ module servant_nexys_a7
  input wire  i_rst,
  input wire  ext_irq,
  output wire o_uart_tx,
- output wire q);
+ output wire q,
+ output wire debug_wb_clk);
 
    parameter memfile = "zephyr_hello.hex";
    parameter memsize = 8192;
@@ -16,6 +17,8 @@ module servant_nexys_a7
 
    wire      sleep_req;
    wire      wakeup_req;
+
+   assign debug_wb_clk = wb_clk;
 
    reg sleep;
 
@@ -37,8 +40,8 @@ module servant_nexys_a7
      (.i_clk (i_clk),
       .i_rst (i_rst),
 
-      .i_clk0_en (sleep),
-      .i_clk1_en (1),
+      .i_clk0_en (1),
+      .i_clk1_en (sleep),
 
       .o_clk0 (main_clk),
       .o_clk1 (wb_clk),
@@ -51,8 +54,10 @@ module servant_nexys_a7
        .memsize (memsize))
    servant
      (.wb_clk (wb_clk),
+      .timer_clk (main_clk),
       .wb_rst (wb_rst),
       .q      (q),
+      .ext_irq (ext_irq),
       .o_sleep_req  (sleep_req),
       .o_wakeup_req (wakeup_req));
 

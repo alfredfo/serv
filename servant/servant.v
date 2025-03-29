@@ -4,6 +4,7 @@ module servant
  input wire  wb_clk,
  input wire  timer_clk,
  input wire  wb_rst,
+ input wire  ext_irq,
  output wire q,
  output wire o_sleep_req,
  output wire o_wakeup_req);
@@ -39,7 +40,6 @@ module servant
    localparam	   rf_l2d   = $clog2((32+csr_regs)*32/rf_width);
 
    wire 	timer_irq;
-   wire		external_irq;
 
 
    wire [31:0]      wb_mem_adr;
@@ -159,7 +159,7 @@ module servant
       .i_clk        (wb_clk),
       .i_rst        (wb_rst),
       .i_timer_irq  (timer_irq),
-      .i_external_irq (external_irq),
+      .i_external_irq (ext_irq),
       .o_wakeup_req (o_wakeup_req),
       .o_sleep_req  (o_sleep_req),
 

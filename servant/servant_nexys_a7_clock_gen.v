@@ -48,7 +48,7 @@ module servant_nexys_a7_clock_gen
   (
     .I (pll_clk),
     .O (o_clk1),
-    .CE (i_clk0_en));
+    .CE (i_clk1_en));
 
 
    
