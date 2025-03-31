@@ -244,6 +244,7 @@ module serv_top
       .i_external_irq   (i_external_irq),
       .i_cnt0           (cnt0),
       .i_wfi            (wfi),
+      .i_init           (init),
       .o_sleep_req      (o_sleep_req),
       .o_wakeup_req     (o_wakeup_req),
       .i_meie           (mie_meie),
