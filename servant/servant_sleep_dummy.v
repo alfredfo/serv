@@ -58,6 +58,7 @@ module servant_sleep_dummy
             .wb_clk (wb_clk),
             .timer_clk (i_clk),
             .wb_rst (i_rst),
+            .ext_irq (ext_irq),
             .q      (q),
             .o_sleep_req  (sleep_req),
             .o_wakeup_req (wakeup_req));
