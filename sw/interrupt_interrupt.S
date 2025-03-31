@@ -16,7 +16,6 @@ _start:
 loop:
         addi t5, x0, 1337
         j loop
-
 handler:
 	li t0, 0x8
 	csrrc x0, mstatus, t0

@@ -23,7 +23,7 @@ module servant_sleep_dummy
    reg             sleep;
 
    always @(posedge i_clk) begin
-      if (sleep_req)
+      if (sleep_req & (!wakeup_req))
         sleep <= 1;
       if (wakeup_req)
         sleep <= 0;
