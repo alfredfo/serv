@@ -77,7 +77,7 @@ module serv_decode
 
    wire co_two_stage_op =
 	~opcode[2] | (funct3[0] & ~funct3[1] & ~opcode[0] & ~opcode[4]) |
-	(funct3[1] & ~funct3[2] & ~opcode[0] & ~opcode[4]) | co_mdu_op;
+	(funct3[1] & ~funct3[2] & ~opcode[0] & ~opcode[4]) | co_mdu_op | o_wfi;
    wire co_shift_op = (opcode[2] & ~funct3[1]) & !co_mdu_op;
    wire co_branch_op = opcode[4];
    wire co_dbus_en    = ~opcode[2] & ~opcode[4];
@@ -134,7 +134,7 @@ module serv_decode
 
    //op20
    wire co_ebreak = op20 & !op22;
-   
+
    wire co_wfi = opcode[4] & opcode[2] & op22 & !(|funct3);
 
 
