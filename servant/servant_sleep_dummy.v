@@ -20,26 +20,16 @@ module servant_sleep_dummy
    wire            sleep_req;
    wire            wakeup_req;
 
+   reg             sleep;
 
-   reg         sleep_req_prev;
-   wire        sleep_pulse;
-   reg         sleep;
-
-      always @(posedge i_clk) begin
-      if (i_rst) begin
-         sleep_req_prev <= 1'b0;
-         sleep <= 1'b0;
-      end else begin
-         sleep_req_prev <= sleep_req;
-         if (sleep_req & ~sleep_req_prev & ~wakeup_req)
-            sleep <= 1'b1;
-         if (wakeup_req)
-            sleep <= 1'b0;
-      end
+   always @(posedge i_clk) begin
+      if (sleep_req)
+        sleep <= 1;
+      if (wakeup_req)
+        sleep <= 0;
+      if (i_rst)
+        sleep <= 0;
    end
-
-
-   assign sleep_pulse = sleep_req & ~sleep_req_prev;
 
    assign wb_clk = (i_clk & (!sleep));
 
