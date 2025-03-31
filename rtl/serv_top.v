@@ -238,9 +238,11 @@ module serv_top
      #(.RESET_STRATEGY (RESET_STRATEGY))
    sleep
      (
+      .i_clk            (clk),
+      .i_rst            (i_rst),
       .i_timer_irq      (i_timer_irq),
       .i_external_irq   (i_external_irq),
-      .i_cnt_done       (cnt_done),
+      .i_cnt0           (cnt0),
       .i_wfi            (wfi),
       .o_sleep_req      (o_sleep_req),
       .o_wakeup_req     (o_wakeup_req),
