@@ -11,9 +11,10 @@ _start:
 	csrrs x0, mstatus, t0
 	li t0, 0x80
 	csrrs x0, mie, t0
+        addi t5, x0, 1111
         wfi
 loop:
-        j loop
+        addi t5, x0, 1337
         j loop
 
 handler:
