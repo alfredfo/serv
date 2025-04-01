@@ -1,20 +1,20 @@
 `default_nettype none
 module servant
-(
- input wire  wb_clk,
- input wire  main_clk,
- input wire  wb_rst,
- input wire  ext_irq,
- output wire q,
- output reg  o_sleep);
+  (
+   input wire  wb_clk,
+   input wire  main_clk,
+   input wire  wb_rst,
+   input wire  ext_irq,
+   output wire q,
+   output reg  o_sleep);
 
-   parameter memfile = "zephyr_hello.hex";
-   parameter memsize = 8192;
-   parameter reset_strategy = "MINI";
-   parameter width = 1;
-   parameter sim = 0;
+   parameter   memfile = "zephyr_hello.hex";
+   parameter   memsize = 8192;
+   parameter   reset_strategy = "MINI";
+   parameter   width = 1;
+   parameter   sim = 0;
    parameter [0:0] debug = 1'b0;
-   parameter with_csr = 1;
+   parameter       with_csr = 1;
    parameter [0:0] compress = 0;
    parameter [0:0] align = compress;
 
@@ -32,54 +32,53 @@ module servant
 `endif
 
 
-   localparam	   aw = $clog2(memsize);
-   localparam	   csr_regs = with_csr*4;
+   localparam       aw = $clog2(memsize);
+   localparam       csr_regs = with_csr*4;
 
-   localparam	   rf_width = width * 2;
-   localparam	   rf_l2d   = $clog2((32+csr_regs)*32/rf_width);
+   localparam       rf_width = width * 2;
+   localparam       rf_l2d   = $clog2((32+csr_regs)*32/rf_width);
 
-   wire 	timer_irq;
-
+   wire             timer_irq;
 
    wire [31:0]      wb_mem_adr;
-   wire [31:0] 	wb_mem_dat;
-   wire [3:0] 	wb_mem_sel;
-   wire 	wb_mem_we;
-   wire 	wb_mem_stb;
-   wire [31:0] 	wb_mem_rdt;
-   wire 	wb_mem_ack;
+   wire [31:0]      wb_mem_dat;
+   wire [3:0]       wb_mem_sel;
+   wire             wb_mem_we;
+   wire             wb_mem_stb;
+   wire [31:0]      wb_mem_rdt;
+   wire             wb_mem_ack;
 
-   wire 	wb_gpio_dat;
-   wire 	wb_gpio_we;
-   wire 	wb_gpio_stb;
-   wire 	wb_gpio_rdt;
+   wire             wb_gpio_dat;
+   wire             wb_gpio_we;
+   wire             wb_gpio_stb;
+   wire             wb_gpio_rdt;
 
-   wire [31:0] 	wb_timer_dat;
-   wire 	wb_timer_we;
-   wire 	wb_timer_stb;
-   wire [31:0] 	wb_timer_rdt;
+   wire [31:0]      wb_timer_dat;
+   wire             wb_timer_we;
+   wire             wb_timer_stb;
+   wire [31:0]      wb_timer_rdt;
 
-   wire [31:0]	   wb_ext_adr;
-   wire [31:0]	   wb_ext_dat;
-   wire [3:0]	   wb_ext_sel;
-   wire		   wb_ext_we;
-   wire		   wb_ext_stb;
-   wire [31:0]	   wb_ext_rdt;
-   wire		   wb_ext_ack;
+   wire [31:0]      wb_ext_adr;
+   wire [31:0]      wb_ext_dat;
+   wire [3:0]       wb_ext_sel;
+   wire             wb_ext_we;
+   wire             wb_ext_stb;
+   wire [31:0]      wb_ext_rdt;
+   wire             wb_ext_ack;
 
-   wire [rf_l2d-1:0]   rf_waddr;
+   wire [rf_l2d-1:0] rf_waddr;
    wire [rf_width-1:0] rf_wdata;
-   wire		       rf_wen;
+   wire                rf_wen;
    wire [rf_l2d-1:0]   rf_raddr;
-   wire		       rf_ren;
+   wire                rf_ren;
    wire [rf_width-1:0] rf_rdata;
    wire                sleep_req;
    wire                wakeup_req;
 
    servant_mux servant_mux
      (
-      .i_clk (wb_clk),
-      .i_rst (wb_rst & (reset_strategy != "NONE")),
+      .i_clk        (wb_clk),
+      .i_rst        (wb_rst & (reset_strategy != "NONE")),
       .i_wb_cpu_adr (wb_ext_adr),
       .i_wb_cpu_dat (wb_ext_dat),
       .i_wb_cpu_sel (wb_ext_sel),
@@ -99,8 +98,8 @@ module servant
       .i_wb_timer_rdt (wb_timer_rdt));
 
    servant_ram
-     #(.memfile (memfile),
-       .depth (memsize),
+     #(.memfile        (memfile),
+       .depth          (memsize),
        .RESET_STRATEGY (reset_strategy))
    ram
      (// Wishbone interface
@@ -116,7 +115,7 @@ module servant
 
    servant_timer
      #(.RESET_STRATEGY (reset_strategy),
-       .WIDTH (32))
+       .WIDTH          (32))
    timer
      (.i_clk       (wb_clk),
       .i_timer_clk (main_clk),
@@ -136,7 +135,7 @@ module servant
       .o_gpio   (q));
 
    serv_rf_ram
-     #(.width (rf_width),
+     #(.width    (rf_width),
        .csr_regs (csr_regs))
    rf_ram
      (.i_clk    (wb_clk),
@@ -154,15 +153,15 @@ module servant
        .with_c   (compress[0]),
        .with_csr (with_csr[0]),
        .with_mdu (with_mdu),
-       .with_ei (with_ei))
+       .with_ei  (with_ei))
    cpu
      (
-      .i_clk        (wb_clk),
-      .i_rst        (wb_rst),
-      .i_timer_irq  (timer_irq),
+      .i_clk          (wb_clk),
+      .i_rst          (wb_rst),
+      .i_timer_irq    (timer_irq),
       .i_external_irq (ext_irq),
-      .o_wakeup_req (wakeup_req),
-      .o_sleep_req  (sleep_req),
+      .o_wakeup_req   (wakeup_req),
+      .o_sleep_req    (sleep_req),
 
       .o_wb_mem_adr   (wb_mem_adr),
       .o_wb_mem_dat   (wb_mem_dat),
@@ -188,11 +187,11 @@ module servant
       .i_rf_rdata  (rf_rdata));
 
    always @(posedge main_clk) begin
-      if(sleep_req)
+      if (sleep_req)
         o_sleep <= 0;
-      if(wakeup_req)
+      if (wakeup_req)
         o_sleep <= 1;
-      if(wb_rst)
+      if (wb_rst)
         o_sleep <= 1;
    end
 
