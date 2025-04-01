@@ -22,9 +22,9 @@ module servant_nexys_a7_clock_gen
        /* Set VCO frequency to 100*8.0=800 MHz
 	Allowed values are 2.0 to 64.0. Resulting VCO freq
 	needs to be 600-1200MHz */
-       .CLKFBOUT_MULT_F (8.000),
+       .CLKFBOUT_MULT_F (6.000),
 
-       .CLKOUT0_DIVIDE_F (25.000)) // 800/25 = 32 MHz
+       .CLKOUT0_DIVIDE_F (64.000)) // 800/25 = 32 MHz
    pll
      (.CLKIN1   (i_clk),
       .RST      (pll_rst),
