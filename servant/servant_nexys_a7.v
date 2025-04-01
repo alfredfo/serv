@@ -20,19 +20,6 @@ module servant_nexys_a7
 
    assign debug_wb_clk = wb_clk;
 
-   reg sleep;
-
-   always @(posedge main_clk) begin
-      if(sleep_req)
-        sleep <= 0;
-      if(wakeup_req)
-        sleep <= 1;
-
-
-      if(wb_rst)
-        sleep <= 1;
-   end
-
    assign o_uart_tx = q;
 
    servant_nexys_a7_clock_gen

@@ -16,22 +16,13 @@ module servant_sleep_dummy
    parameter [0:0] compress = 0;
    parameter [0:0] align = compress;
 
+
+   wire            sleep;
    wire            wb_clk;
    wire            sleep_req;
    wire            wakeup_req;
 
-   reg             sleep;
-
-   always @(posedge i_clk) begin
-      if (sleep_req)
-        sleep <= 1;
-      if (wakeup_req)
-        sleep <= 0;
-      if (i_rst)
-        sleep <= 0;
-   end
-
-   assign wb_clk = (i_clk & (!sleep));
+   assign wb_clk = (i_clk & sleep);
 
    servant #(
              .memfile(memfile),
@@ -45,13 +36,12 @@ module servant_sleep_dummy
              .align(align)
              )
    servant (
-            .wb_clk (wb_clk),
-            .timer_clk (i_clk),
-            .wb_rst (i_rst),
-            .ext_irq (ext_irq),
-            .q      (q),
-            .o_sleep_req  (sleep_req),
-            .o_wakeup_req (wakeup_req));
+            .wb_clk   (wb_clk),
+            .main_clk (i_clk),
+            .wb_rst   (i_rst),
+            .ext_irq  (ext_irq),
+            .q        (q),
+            .o_sleep  (sleep));
 
 endmodule
 `default_nettype wire
