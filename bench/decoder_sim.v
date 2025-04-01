@@ -68,7 +68,6 @@ module decoder_sim
        .o_wfi(wfi),
        .o_branch_op(branch_op),
        .o_shift_op(shift_op),
-       .o_slt_or_branch(slt_or_branch),
        .o_rd_op(rd_op),
        .o_two_stage_op(two_stage_op),
        .o_dbus_en(dbus_en),
