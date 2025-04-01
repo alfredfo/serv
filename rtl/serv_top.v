@@ -233,10 +233,7 @@ module serv_top
       end
    endgenerate
 
-
-   serv_sleep
-     #(.RESET_STRATEGY (RESET_STRATEGY))
-   sleep
+   serv_sleep sleep
      (
       .i_clk            (clk),
       .i_rst            (i_rst),

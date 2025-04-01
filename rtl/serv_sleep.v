@@ -1,8 +1,5 @@
 `default_nettype none
 module serv_sleep
-  #(
-    parameter RESET_STRATEGY = "MINI"
-    )
    (
     input wire  i_clk,
     input wire  i_rst,
