@@ -93,7 +93,7 @@ int external_test(Vservant_interrupt_sim *top, VerilatedVcdC *tfp, vluint64_t ti
 
 int timer_test(Vservant_interrupt_sim *top, VerilatedVcdC *tfp, vluint64_t timeout) {
   int clock = 0;
-  while (!(done || Verilated::gotFinish())) {
+  while (Verilated::gotFinish()) {
     clock++;
     top->wb_rst = main_time < 1000;
     top->eval();
@@ -103,10 +103,14 @@ int timer_test(Vservant_interrupt_sim *top, VerilatedVcdC *tfp, vluint64_t timeo
     if (top->wb_clk && top->pc_vld && top->pc_adr) {
       std::this_thread::sleep_for(std::chrono::milliseconds(500));
       printf("%d | %d\n", clock, top->pc_adr);
+      if (top->mret) {
+        printf("mret detected, exiting\n");
+        exit(0);
+      }
     }
     if (timeout && (main_time >= timeout)) {
       printf("Timeout: Exiting at time %lu\n", main_time);
-      done = true;
+      exit(0);
     }
     top->wb_clk = !top->wb_clk;
     main_time+=31.25;

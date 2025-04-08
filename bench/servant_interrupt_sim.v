@@ -1,13 +1,14 @@
 `default_nettype none
 module servant_interrupt_sim
   (input wire	      wb_clk,
-   input wire	      wb_rst,
-   input wire	      ext_irq,
+   input wire         wb_rst,
+   input wire         ext_irq,
    output wire [31:0] pc_adr,
-   output wire	      pc_vld,
-   output wire	      q,
+   output wire        pc_vld,
+   output wire        q,
    output wire [3:0]  mcause3_0,
-   output wire	      new_irq
+   output wire        new_irq,
+   output wire        mret
 );
 
    parameter memfile = "";
@@ -38,5 +39,6 @@ module servant_interrupt_sim
    assign pc_adr = dut.servant.wb_mem_adr;
    assign pc_vld = dut.servant.wb_mem_ack;
    assign new_irq = dut.servant.cpu.cpu.new_irq;
+   assign mret = dut.servant.cpu.cpu.mret;
 
 endmodule
