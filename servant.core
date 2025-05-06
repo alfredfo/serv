@@ -730,7 +730,7 @@ targets:
 
   verilator_timer_tb:
     description: Verilator timer testbench
-    filesets : [soc, verilator_timer_tb]
+    filesets : [soc, sleep_dummy, verilator_timer_tb]
     flow: sim
     flow_options:
       tool: verilator

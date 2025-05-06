@@ -6,7 +6,7 @@ module servant_timer_sim
    output wire [31:0] pc_adr,
    output wire        pc_vld,
    output wire        q,
-   output wire        timer_irq,
+   output wire        timer_irq
    );
 
    parameter          memfile = "";
@@ -23,10 +23,10 @@ module servant_timer_sim
    initial
      if ($value$plusargs("firmware=%s", firmware_file)) begin
         $display("Loading RAM from %0s", firmware_file);
-        $readmemh(firmware_file, dut.ram.mem);
+        $readmemh(firmware_file, dut.servant.ram.mem);
      end
 
-   servant
+   servant_sleep_dummy
      #(.memfile  (memfile),
        .memsize  (memsize),
        .width    (width),
@@ -35,9 +35,9 @@ module servant_timer_sim
        .with_csr (with_csr),
        .compress (compressed[0:0]),
        .align    (align[0:0]))
-   dut(wb_clk, timer_clk, wb_rst, ext_irq, q, sleep);
+   dut(wb_clk, wb_rst, ext_irq, q);
 
-   assign pc_adr = dut.wb_mem_adr;
-   assign pc_vld = dut.wb_mem_ack;
-   assign timer_irq = dut.timer_irq;
+   assign pc_adr = dut.servant.wb_mem_adr;
+   assign pc_vld = dut.servant.wb_mem_ack;
+   assign timer_irq = dut.servant.timer_irq;
 endmodule
