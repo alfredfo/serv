@@ -99,7 +99,7 @@ int timer_test(Vservant_external_sim *top, VerilatedVcdC *tfp,
     if (tfp) {
       tfp->dump(clock);
     }
-    if (clock >= interrupt_time && clock <= interrupt_time + 100) {
+    if (clock >= interrupt_time && clock <= interrupt_time + 200) {
       if (top->ext_irq == 0) {
         printf("interrupting %d\n", clock);
       }
