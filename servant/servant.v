@@ -188,11 +188,11 @@ module servant
 
    always @(posedge main_clk) begin
       if (sleep_req)
-        o_sleep <= 0;
+        o_sleep <= 1;
       if (wakeup_req)
-        o_sleep <= 1;
+        o_sleep <= 0;
       if (wb_rst)
-        o_sleep <= 1;
+        o_sleep <= 0;
    end
 
 endmodule

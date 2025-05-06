@@ -22,7 +22,7 @@ module servant_nexys_a7
        (.i_clk (i_clk),
         .i_rst (i_rst),
         .i_clk0_en (1),
-        .i_clk1_en (sleep),
+        .i_clk1_en (!sleep),
         .o_clk0 (main_clk),
         .o_clk1 (wb_clk),
         .o_rst (wb_rst));
