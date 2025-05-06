@@ -94,12 +94,14 @@ int timer_test(Vservant_external_sim *top, VerilatedVcdC *tfp,
                vluint64_t timeout, vluint64_t interrupt_time) {
   int clock = 0;
   while (Verilated::gotFinish()) {
-    clock++;
     top->eval();
-    if (tfp) {
+    if (top->wb_clk) {
+      clock++;
+    }
+    if (tfp && top->wb_clk) {
       tfp->dump(clock);
     }
-    if (clock >= interrupt_time && clock <= interrupt_time + 200) {
+    if (clock >= interrupt_time && clock <= interrupt_time + 100) {
       if (top->ext_irq == 0) {
         printf("interrupting %d\n", clock);
       }

@@ -11,8 +11,6 @@ using namespace std;
 
 static bool done;
 
-#define TIMER_CLK_DIV 7
-
 vluint64_t main_time = 0;       // Current simulation time
 // This is a 64-bit integer to reduce wrap over issues and
 // allow modulus.  You can also use a double, if you wish.
@@ -61,14 +59,17 @@ int main(int argc, char **argv, char **env)
   int last_cycle = 0;
   std::time_t last_time = std::time(nullptr);
 
-  top->wb_clk = 1;
-  top->timer_clk = 1;
+  top->wb_clk = 0;
+  top->timer_clk = 0;
   bool q = top->q;
   int clock = 0;
+  top->eval();
   while (!(done || Verilated::gotFinish())) {
-    clock++;
-    top->wb_rst = main_time < 1000;
     top->eval();
+    if (top->wb_clk) {
+      clock++;
+    }
+    top->wb_rst = main_time < 1000;
     if (tfp) {
       tfp->dump(main_time);
     }
@@ -76,15 +77,12 @@ int main(int argc, char **argv, char **env)
       std::this_thread::sleep_for(std::chrono::milliseconds(500));
       printf("%d | %d\n", clock, top->pc_adr);
     }
-    //    if (top->timer_irq) {
-    //  printf("timer_irq high\n");
-    //}
     if (timeout && (main_time >= timeout)) {
       printf("Timeout: Exiting at time %lu\n", main_time);
       done = true;
     }
     top->wb_clk = !top->wb_clk;
-    top->timer_clk = ((clock % TIMER_CLK_DIV) <= (TIMER_CLK_DIV / 2));
+    top->timer_clk = top->wb_clk;
     main_time+=31.25;
   }
   if (tfp) {
