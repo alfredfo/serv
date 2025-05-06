@@ -40,6 +40,6 @@ module servant_timer_sim
    assign pc_vld = dut.wb_mem_ack;
    assign timer_irq = dut.timer_irq;
    assign mie_mtie = dut.cpu.cpu.mret;
-   assign isjump = dut.cpu.cpu.jump;  
+   assign isjump = dut.cpu.cpu.jump;
 
 endmodule

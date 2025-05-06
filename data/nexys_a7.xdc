@@ -8,17 +8,13 @@ set_property -dict { PACKAGE_PIN P17   IOSTANDARD LVCMOS33 } [get_ports {ext_irq
 ## LEDs (LED0)
 set_property -dict { PACKAGE_PIN H17   IOSTANDARD LVCMOS33 } [get_ports { q }];
 
-
 ## UART
 set_property -dict { PACKAGE_PIN D4   IOSTANDARD LVCMOS33 } [get_ports { o_uart_tx }];
 
 set_property -dict { PACKAGE_PIN C12   IOSTANDARD LVCMOS33 } [get_ports { i_rst }]; # ACTIVE LOW !!!
 
-
 set_property CFGBVS VCCO [current_design]
 set_property CONFIG_VOLTAGE 3.3 [current_design]
-
-
 
 ## DEBUG (JA1)
 #set_property -dict { PACKAGE_PIN C17   IOSTANDARD LVCMOS33 } [get_ports { debug_wb_clk }];      #JA1

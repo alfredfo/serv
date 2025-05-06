@@ -614,15 +614,6 @@ targets:
         speed   : -4
     toplevel : servax
 
-#  nexys_a7:
-#    description: Digilent Nexys A7
-#    filesets : [mem_files, soc, nexys_a7]
-#    flow: vivado
-#    flow_options:
-#      part : xc7a100tcsg324-1
-#    parameters : [memfile, memsize, frequency=32]
-#    toplevel : servix
-
   orangecrab_r0.2:
     default_tool: trellis
     description : OrangeCrab R0.2
