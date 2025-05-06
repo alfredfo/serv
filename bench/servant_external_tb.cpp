@@ -11,8 +11,6 @@ using namespace std;
 
 static bool done;
 
-#define TIMER_CLK_DIV 3
-
 vluint64_t main_time = 0;       // Current simulation time
 // This is a 64-bit integer to reduce wrap over issues and
 // allow modulus.  You can also use a double, if you wish.
@@ -52,7 +50,7 @@ int main(int argc, char **argv, char **env) {
   if (arg_timeout[0])
     timeout = atoi(arg_timeout+9);
 
-  vluint64_t interrupt_time = 3000;
+  vluint64_t interrupt_time = 1500;
   const char *arg_interrupt_time =
     Verilated::commandArgsPlusMatch("interrupt_time=");
   if (arg_interrupt_time[0]) {
@@ -99,10 +97,12 @@ int timer_test(Vservant_external_sim *top, VerilatedVcdC *tfp,
     clock++;
     top->eval();
     if (tfp) {
-      tfp->dump(main_time);
+      tfp->dump(clock);
     }
-    if (clock >= interrupt_time && clock <= interrupt_time + 64) {
-      printf("interrupting %d\n", clock);
+    if (clock >= interrupt_time && clock <= interrupt_time + 100) {
+      if (top->ext_irq == 0) {
+        printf("interrupting %d\n", clock);
+      }
       top->ext_irq = 1;
     } else {
       top->ext_irq = 0;
@@ -115,11 +115,10 @@ int timer_test(Vservant_external_sim *top, VerilatedVcdC *tfp,
         exit(0);
       }
     }
-    if (timeout && (main_time >= timeout)) {
-      printf("Timeout: Exiting at time %lu\n", main_time);
+    if (timeout && (clock >= timeout)) {
+      printf("Timeout: Exiting at time %d\n", clock);
       exit(0);
     }
     top->wb_clk = !top->wb_clk;
-    main_time+=31.25;
   }
 }
