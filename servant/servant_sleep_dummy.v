@@ -22,7 +22,7 @@ module servant_sleep_dummy
    wire            sleep_req;
    wire            wakeup_req;
 
-   assign wb_clk = (i_clk & (!sleep));
+   assign wb_clk = i_clk & !sleep;
 
    servant #(
              .memfile(memfile),
