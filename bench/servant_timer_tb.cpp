@@ -63,7 +63,6 @@ int main(int argc, char **argv, char **env)
 
   top->wb_clk = 1;
   top->timer_clk = 1;
-  printf("timer irq, %d\n", top->timer_irq);
   bool q = top->q;
   int clock = 0;
   while (!(done || Verilated::gotFinish())) {
@@ -77,16 +76,15 @@ int main(int argc, char **argv, char **env)
       std::this_thread::sleep_for(std::chrono::milliseconds(500));
       printf("%d | %d\n", clock, top->pc_adr);
     }
+    //    if (top->timer_irq) {
+    //  printf("timer_irq high\n");
+    //}
     if (timeout && (main_time >= timeout)) {
       printf("Timeout: Exiting at time %lu\n", main_time);
       done = true;
     }
     top->wb_clk = !top->wb_clk;
     top->timer_clk = ((clock % TIMER_CLK_DIV) <= (TIMER_CLK_DIV / 2));
-
-    // 4177
-    // top->timer_clk = top->wb_clk; // 2107
-    // printf("%d | %d\n", top->wb_clk, top->timer_clk);
     main_time+=31.25;
   }
   if (tfp) {
