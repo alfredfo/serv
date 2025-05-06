@@ -69,6 +69,7 @@ int main(int argc, char **argv, char **env) {
   std::time_t last_time = std::time(nullptr);
 
   top->wb_clk = 1;
+  top->ext_irq = 0;
   bool q = top->q;
   int clock = 0;
   reset(top, tfp);
@@ -81,12 +82,13 @@ int main(int argc, char **argv, char **env) {
 
 
 int reset(Vservant_external_sim *top, VerilatedVcdC *tfp) {
-  top->wb_rst = 0;
+  top->wb_rst = 1;
   for (int i = 0; i < 10; i++) {
     top->wb_clk = !top->wb_clk;
     top->eval();
   }
-  top->wb_rst = 1;
+  top->wb_clk = !top->wb_clk;
+  top->wb_rst = 0;
   return 0;
 }
 
@@ -99,11 +101,11 @@ int timer_test(Vservant_external_sim *top, VerilatedVcdC *tfp,
     if (tfp) {
       tfp->dump(main_time);
     }
-    if (clock >= interrupt_time && clock <= interrupt_time + 100) {
+    if (clock >= interrupt_time && clock <= interrupt_time + 64) {
       printf("interrupting %d\n", clock);
-      top->new_irq = 1;
+      top->ext_irq = 1;
     } else {
-      top->new_irq = 0;
+      top->ext_irq = 0;
     }
     if (top->wb_clk && top->pc_vld && top->pc_adr) {
       std::this_thread::sleep_for(std::chrono::milliseconds(500));
