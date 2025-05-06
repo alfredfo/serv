@@ -36,14 +36,6 @@ filesets:
     file_type : verilogSource
     depend : [vlog_tb_utils]
 
-  servant_interrupt_tb:
-    files:
-      - sw/interrupt_interrupt.hex : {file_type: user, copyto: .}
-      - bench/servant_interrupt_sim.v
-      - bench/servant_interrupt_tb.v
-    file_type : verilogSource
-    depend : [vlog_tb_utils]
-
   service:
     files:
       - servant/ice40_pll.v
@@ -87,12 +79,6 @@ filesets:
     files:
       - bench/servant_external_sim.v
       - "bench/servant_external_tb.cpp" : {file_type : cppSource}
-    file_type : verilogSource
-
-  verilator_interrupt_tb:
-    files:
-      - bench/servant_interrupt_sim.v
-      - "bench/servant_interrupt_tb.cpp" : {file_type : cppSource}
     file_type : verilogSource
 
   # Target-specific filesets. Alphabetically sorted
@@ -789,30 +775,6 @@ targets:
       - align
       - with_csr=1
     toplevel : servant_external_sim
-
-  verilator_interrupt_tb:
-    description: Verilator interrupt testbench
-    filesets : [soc, sleep_dummy, verilator_interrupt_tb]
-    flow: sim
-    flow_options:
-      tool: verilator
-      verilator_options : [--trace]
-    parameters :
-      - RISCV_FORMAL
-      - "mdu? (MDU=1)"
-      - cps
-      - firmware
-      - memsize
-      - signature
-      - timeout
-      - trace_pc
-      - vcd
-      - vcd_start
-      - width
-      - compressed
-      - align
-      - with_csr=1
-    toplevel : servant_interrupt_sim
 
   zcu106:
     default_tool: vivado

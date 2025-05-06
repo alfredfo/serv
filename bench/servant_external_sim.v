@@ -1,12 +1,14 @@
 `default_nettype none
-module servant_external_sim
+module servant_interrupt_sim
   (input wire	      wb_clk,
-   input wire	      timer_clk,
-   input wire	      wb_rst,
+   input wire         wb_rst,
+   input wire         ext_irq,
    output wire [31:0] pc_adr,
-   output wire	      pc_vld,
-   output wire	      q,
-   input wire	      ext_irq
+   output wire        pc_vld,
+   output wire        q,
+   output wire [3:0]  mcause3_0,
+   output wire        new_irq,
+   output wire        mret
 );
 
    parameter memfile = "";
@@ -20,10 +22,10 @@ module servant_external_sim
    initial
      if ($value$plusargs("firmware=%s", firmware_file)) begin
 	$display("Loading RAM from %0s", firmware_file);
-	$readmemh(firmware_file, dut.ram.mem);
+	$readmemh(firmware_file, dut.servant.ram.mem);
      end
 
-   servant
+   servant_sleep_dummy
      #(.memfile  (memfile),
        .memsize  (memsize),
        .width    (width),
@@ -32,10 +34,11 @@ module servant_external_sim
        .with_csr (with_csr),
        .compress (compressed[0:0]),
        .align    (align[0:0]))
-   dut(wb_clk, timer_clk, wb_rst, q);
+   dut(wb_clk, wb_rst, ext_irq, q);
 
-   assign pc_adr = dut.wb_mem_adr;
-   assign pc_vld = dut.wb_mem_ack;
-   assign dut.external_irq = ext_irq;
+   assign pc_adr = dut.servant.wb_mem_adr;
+   assign pc_vld = dut.servant.wb_mem_ack;
+   assign new_irq = dut.servant.cpu.cpu.new_irq;
+   assign mret = dut.servant.cpu.cpu.mret;
 
 endmodule
