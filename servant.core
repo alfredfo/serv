@@ -754,7 +754,7 @@ targets:
 
   verilator_external_tb:
     description: Verilator timer testbench
-    filesets : [soc, verilator_external_tb]
+    filesets : [soc, sleep_dummy, verilator_external_tb]
     flow: sim
     flow_options:
       tool: verilator

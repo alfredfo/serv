@@ -3,7 +3,7 @@
 #include <signal.h>
 
 #include "verilated_vcd_c.h"
-#include "Vservant_interrupt_sim.h"
+#include "Vservant_external_sim.h"
 
 #include <ctime>
 
@@ -27,14 +27,14 @@ void INThandler(int signal) {
   done = true;
 }
 
-int reset(Vservant_interrupt_sim *, VerilatedVcdC *);
-int timer_test(Vservant_interrupt_sim *, VerilatedVcdC *, vluint64_t);
-int external_test(Vservant_interrupt_sim *, VerilatedVcdC *, vluint64_t);
+int reset(Vservant_external_sim *, VerilatedVcdC *);
+int timer_test(Vservant_external_sim *, VerilatedVcdC *,
+               vluint64_t, vluint64_t);
 
 int main(int argc, char **argv, char **env) {
   Verilated::commandArgs(argc, argv);
 
-  Vservant_interrupt_sim* top = new Vservant_interrupt_sim;
+  Vservant_external_sim* top = new Vservant_external_sim;
 
   VerilatedVcdC * tfp = 0;
   const char *vcd = Verilated::commandArgsPlusMatch("vcd=");
@@ -52,6 +52,13 @@ int main(int argc, char **argv, char **env) {
   if (arg_timeout[0])
     timeout = atoi(arg_timeout+9);
 
+  vluint64_t interrupt_time = 3000;
+  const char *arg_interrupt_time =
+    Verilated::commandArgsPlusMatch("interrupt_time=");
+  if (arg_interrupt_time[0]) {
+    interrupt_time = atoi(arg_interrupt_time);
+  }
+
   vluint64_t vcd_start = 0;
   const char *arg_vcd_start = Verilated::commandArgsPlusMatch("vcd_start=");
   if (arg_vcd_start[0])
@@ -64,9 +71,8 @@ int main(int argc, char **argv, char **env) {
   top->wb_clk = 1;
   bool q = top->q;
   int clock = 0;
-  timer_test(top, tfp, timeout);
   reset(top, tfp);
-  timer_test(top, tfp, timeout);
+  timer_test(top, tfp, timeout, interrupt_time);
   if (tfp) {
     tfp->close();
   }
@@ -74,31 +80,30 @@ int main(int argc, char **argv, char **env) {
 }
 
 
-int reset(Vservant_interrupt_sim *top, VerilatedVcd *tfp) {
-    top->wb_rst = 1;
-    for (int i = 0; i < 10; i++) {
-        top->wb_clk = !top->wb_clk;
-        top->eval();
-        if (tfp) {
-            tfp->dump(main_time);
-        }
-    }
-    top->wb_rst = 0;
-    return 0;
+int reset(Vservant_external_sim *top, VerilatedVcdC *tfp) {
+  top->wb_rst = 0;
+  for (int i = 0; i < 10; i++) {
+    top->wb_clk = !top->wb_clk;
+    top->eval();
+  }
+  top->wb_rst = 1;
+  return 0;
 }
 
-int external_test(Vservant_interrupt_sim *top, VerilatedVcdC *tfp, vluint64_t timeout) {
-  int clock = 0;
-}
-
-int timer_test(Vservant_interrupt_sim *top, VerilatedVcdC *tfp, vluint64_t timeout) {
+int timer_test(Vservant_external_sim *top, VerilatedVcdC *tfp,
+               vluint64_t timeout, vluint64_t interrupt_time) {
   int clock = 0;
   while (Verilated::gotFinish()) {
     clock++;
-    top->wb_rst = main_time < 1000;
     top->eval();
     if (tfp) {
       tfp->dump(main_time);
+    }
+    if (clock >= interrupt_time && clock <= interrupt_time + 100) {
+      printf("interrupting %d\n", clock);
+      top->new_irq = 1;
+    } else {
+      top->new_irq = 0;
     }
     if (top->wb_clk && top->pc_vld && top->pc_adr) {
       std::this_thread::sleep_for(std::chrono::milliseconds(500));
