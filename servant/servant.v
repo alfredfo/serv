@@ -117,8 +117,7 @@ module servant
      #(.RESET_STRATEGY (reset_strategy),
        .WIDTH          (32))
    timer
-     (.i_clk       (wb_clk),
-      .i_timer_clk (main_clk),
+     (.i_clk       (main_clk),
       .i_rst       (wb_rst),
       .o_irq       (timer_irq),
       .i_wb_cyc    (wb_timer_stb),
