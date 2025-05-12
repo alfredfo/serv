@@ -3,7 +3,8 @@ module servant
 (
  input wire  wb_clk,
  input wire  wb_rst,
- output wire q);
+   input wire  ext_irq,
+ output wire q,
 
    parameter memfile = "zephyr_hello.hex";
    parameter memsize = 8192;
@@ -146,6 +147,7 @@ module servant
       .i_clk        (wb_clk),
       .i_rst        (wb_rst),
       .i_timer_irq  (timer_irq),
+      .i_external_irq (ext_irq),
 
       .o_wb_mem_adr   (wb_mem_adr),
       .o_wb_mem_dat   (wb_mem_dat),

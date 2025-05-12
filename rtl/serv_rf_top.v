@@ -36,6 +36,7 @@ module serv_rf_top
    input wire 	      clk,
    input wire 	      i_rst,
    input wire 	      i_timer_irq,
+   input wire	      i_external_irq,
 `ifdef RISCV_FORMAL
    output wire 	      rvfi_valid,
    output wire [63:0] rvfi_order,
@@ -158,6 +159,7 @@ module serv_rf_top
       .clk      (clk),
       .i_rst    (i_rst),
       .i_timer_irq  (i_timer_irq),
+      .i_external_irq (i_external_irq),
 `ifdef RISCV_FORMAL
       .rvfi_valid     (rvfi_valid    ),
       .rvfi_order     (rvfi_order    ),

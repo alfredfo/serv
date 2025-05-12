@@ -22,37 +22,36 @@ module servile
     parameter	    regs = 32+with_csr*4,
     parameter	    rf_l2d = $clog2(regs*32/rf_width))
   (
-   input wire		      i_clk,
-   input wire		      i_rst,
-   input wire		      i_timer_irq,
+   input wire                 i_clk,
+   input wire                 i_rst,
+   input wire                 i_timer_irq,
+   input wire                 i_external_irq,
 
    //Memory (WB) interface
-   output wire [31:0]	      o_wb_mem_adr,
-   output wire [31:0]	      o_wb_mem_dat,
-   output wire [3:0]	      o_wb_mem_sel,
-   output wire		      o_wb_mem_we ,
-   output wire		      o_wb_mem_stb,
-   input wire [31:0]	      i_wb_mem_rdt,
-   input wire		      i_wb_mem_ack,
+   output wire [31:0]         o_wb_mem_adr,
+   output wire [31:0]         o_wb_mem_dat,
+   output wire [3:0]          o_wb_mem_sel,
+   output wire                o_wb_mem_we ,
+   output wire                o_wb_mem_stb,
+   input wire [31:0]          i_wb_mem_rdt,
+   input wire                 i_wb_mem_ack,
 
    //Extension (WB) interface
-   output wire [31:0]	      o_wb_ext_adr,
-   output wire [31:0]	      o_wb_ext_dat,
-   output wire [3:0]	      o_wb_ext_sel,
-   output wire		      o_wb_ext_we ,
-   output wire		      o_wb_ext_stb,
-   input wire [31:0]	      i_wb_ext_rdt,
-   input wire		      i_wb_ext_ack,
+   output wire [31:0]         o_wb_ext_adr,
+   output wire [31:0]         o_wb_ext_dat,
+   output wire [3:0]          o_wb_ext_sel,
+   output wire                o_wb_ext_we ,
+   output wire                o_wb_ext_stb,
+   input wire [31:0]          i_wb_ext_rdt,
+   input wire                 i_wb_ext_ack,
 
    //RF (SRAM) interface
    output wire [rf_l2d-1:0]   o_rf_waddr,
    output wire [rf_width-1:0] o_rf_wdata,
-   output wire		      o_rf_wen,
+   output wire                o_rf_wen,
    output wire [rf_l2d-1:0]   o_rf_raddr,
    input wire [rf_width-1:0]  i_rf_rdata,
-   output wire		      o_rf_ren);
-
-
+   output wire                o_rf_ren);
 
    wire [31:0] 	wb_ibus_adr;
    wire 	wb_ibus_stb;
@@ -148,8 +147,6 @@ module servile
       .i_wb_mem_rdt (i_wb_mem_rdt),
       .i_wb_mem_ack (i_wb_mem_ack));
 
-
-
    serv_rf_ram_if
      #(.width    (rf_width),
        .W        (width),
@@ -194,9 +191,8 @@ module servile
       end else begin
 	 assign mdu_ready = 1'b0;
 	 assign mdu_rd = 32'd0;
-      end
+      end // else: !if(with_mdu)
    endgenerate
-
    serv_top
      #(
        .WITH_CSR       (with_csr?1:0),
@@ -212,6 +208,7 @@ module servile
       .clk         (i_clk),
       .i_rst       (i_rst),
       .i_timer_irq (i_timer_irq),
+      .i_external_irq (i_external_irq),
 
 `ifdef RISCV_FORMAL
       .rvfi_valid     (),
@@ -265,6 +262,10 @@ module servile
       .o_dbus_cyc  (wb_dbus_stb),
       .i_dbus_rdt  (wb_dbus_rdt),
       .i_dbus_ack  (wb_dbus_ack),
+
+      // Sleep
+      .o_sleep_req      (o_sleep_req),
+      .o_wakeup_req     (o_wakeup_req),
 
       //Extension IF
       .o_ext_rs1    (mdu_rs1),

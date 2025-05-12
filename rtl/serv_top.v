@@ -15,6 +15,7 @@ module serv_top
    input wire 		      clk,
    input wire 		      i_rst,
    input wire 		      i_timer_irq,
+   input wire		      i_external_irq,
 `ifdef RISCV_FORMAL
    output wire 		      rvfi_valid,
    output wire [63:0] 	      rvfi_order,
@@ -183,6 +184,9 @@ module serv_top
    wire        wb_ibus_cyc;
    wire [31:0] wb_ibus_rdt;
    wire        wb_ibus_ack;
+
+   wire	       mie_meie;
+   wire	       mie_mtie;
 
    generate
       if (ALIGN) begin : gen_align
@@ -565,6 +569,7 @@ module serv_top
 	    .i_cnt_done   (cnt_done),
 	    .i_mem_op     (!mtval_pc),
 	    .i_mtip       (i_timer_irq),
+	    .i_meip       (i_external_irq),
 	    .i_trap       (trap),
 	    .o_new_irq    (new_irq),
 	    //Control
@@ -582,7 +587,9 @@ module serv_top
 	    .o_csr_in     (csr_in),
 	    .i_csr_imm    (csr_imm),
 	    .i_rs1        (rs1),
-	    .o_q          (csr_rd));
+	    .o_q          (csr_rd),
+	    .o_meie (mie_meie),
+	    .o_mtie (mie_mtie));
       end else begin : gen_no_csr
 	 assign csr_in = {W{1'b0}};
 	 assign csr_rd = {W{1'b0}};
