@@ -130,6 +130,12 @@ filesets:
       - servant/servant_cmod_a7.v : {file_type : verilogSource}
       - data/cmod_a7_35t.xdc : {file_type : xdc}
 
+  nexys_a7:
+    files:
+      - servant/servant_nexys_a7_clock_gen.v : {file_type : verilogSource}
+      - servant/servant_nexys_a7.v : {file_type : verilogSource}
+      - data/nexys_a7.xdc : {file_type : xdc}
+
   cyc1000:
     files:
       - data/cyc1000.sdc : {file_type : SDC}
@@ -221,12 +227,6 @@ filesets:
       - servant/servax.v : {file_type : verilogSource}
       - data/nexys_2.tcl : {file_type : tclSource}
       - data/nexys_2.ucf : {file_type : UCF}
-
-  nexys_a7:
-    files:
-      - servant/servix_clock_gen.v : {file_type : verilogSource}
-      - servant/servix.v : {file_type : verilogSource}
-      - data/nexys_a7.xdc : {file_type : xdc}
 
   orangecrab:
     files:
@@ -363,6 +363,15 @@ targets:
       part : xc7a35tcpg236-1
     parameters : [memfile, memsize]
     toplevel : servant_cmod_a7
+
+  nexys_a7:
+    description: Digilent Nexys A7
+    filesets : [mem_files, soc, nexys_a7]
+    flow: vivado
+    flow_options:
+      part : xc7a100tcsg324-1
+    parameters : [memfile, memsize]
+    toplevel : servant_nexys_a7
 
   cyc1000:
     default_tool: quartus
@@ -569,15 +578,6 @@ targets:
         package : fg320
         speed   : -4
     toplevel : servax
-
-  nexys_a7:
-    description: Digilent Nexys A7
-    filesets : [mem_files, soc, nexys_a7]
-    flow: vivado
-    flow_options:
-      part : xc7a100tcsg324-1
-    parameters : [memfile, memsize, frequency=32]
-    toplevel : servix
 
   orangecrab_r0.2:
     default_tool: trellis
