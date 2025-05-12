@@ -57,7 +57,15 @@ module serv_state
    output wire 	     o_rf_rreq,
    output wire 	     o_rf_wreq,
    input wire 	     i_rf_ready,
-   output wire 	     o_rf_rd_en);
+   output wire 	     o_rf_rd_en,
+   // Sleep
+   input wire        i_mtie,
+   input wire        i_meie,
+   input wire        i_timer_irq,
+   input wire        i_external_irq,
+   input wire        i_wfi,
+   output wire       o_sleep_req,
+   output wire       o_wakeup_req);
 
    reg 	init_done;
    wire misalign_trap_sync;
@@ -132,6 +140,10 @@ module serv_state
    assign o_init = i_two_stage_op & !i_new_irq & !init_done;
 
    assign o_cnt_done = (o_cnt[4:2] == 3'b111) & cnt_r[3];
+
+   // Sleep
+   assign o_sleep_req = i_wfi & o_cnt0 & o_init;
+   assign o_wakeup_req = (i_timer_irq & i_mtie) | (i_external_irq & i_meie);
 
    always @(posedge i_clk) begin
       //ibus_cyc changes on three conditions.

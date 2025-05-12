@@ -71,6 +71,11 @@ module serv_top
    input wire  [31:0] i_ext_rd,
    output wire [31:0] o_ext_rs1,
    output wire [31:0] o_ext_rs2,
+
+   // Sleep functionality
+   output wire		      o_sleep_req,
+   output wire		      o_wakeup_req,
+
    //MDU
    output wire        o_mdu_valid);
 
@@ -286,7 +291,15 @@ module serv_top
       .o_rf_rreq      (o_rf_rreq),
       .o_rf_wreq      (o_rf_wreq),
       .i_rf_ready     (i_rf_ready),
-      .o_rf_rd_en     (rd_en));
+      .o_rf_rd_en     (rd_en),
+      //Sleep
+      .i_external_irq   (i_external_irq),
+      .i_meie           (mie_meie),
+      .i_mtie           (mie_mtie),
+      .i_timer_irq      (i_timer_irq),
+      .i_wfi            (wfi),
+      .o_sleep_req      (o_sleep_req),
+      .o_wakeup_req     (o_wakeup_req));
 
    serv_decode
      #(.PRE_REGISTER (PRE_REGISTER),

@@ -27,6 +27,9 @@ module servile
    input wire                 i_timer_irq,
    input wire                 i_external_irq,
 
+   output wire                o_sleep_req,
+   output wire                o_wakeup_req,
+
    //Memory (WB) interface
    output wire [31:0]         o_wb_mem_adr,
    output wire [31:0]         o_wb_mem_dat,
